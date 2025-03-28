@@ -1,5 +1,5 @@
-import sequelize from "../database/client";
 import { DataTypes, Model } from "sequelize";
+import sequelize from "../database/client.js";
 
 export default class Form extends Model {};
 
@@ -15,13 +15,8 @@ Form.init({
     },
     description: {
         type: DataTypes.TEXT
-    },
-    templateForm_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     }
 }, {
     sequelize,
-    tableName: 'forms'
+    tableName: 'template_forms'
 });
-

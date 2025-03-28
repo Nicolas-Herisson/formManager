@@ -1,16 +1,22 @@
 import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+console.log(`process.env.DATABASE_DIALECT = ${process.env.DATABASE_DIALECT}, process.env.DATABASE_NAME = ${process.env.DATABASE_NAME}, process.env.DATABASE_USERNAME = ${process.env.DATABASE_USERNAME}, process.env.DATABASE_PASSWORD = ${process.env.DATABASE_PASSWORD}`);
 
 const sequelize = new Sequelize({
     dialect: process.env.DATABASE_DIALECT,
     database: process.env.DATABASE_NAME,
-    user: process.env.DATABASE_USER,
+    username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT
-}, {
-    timestamps: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    //host: process.env.DATABASE_HOST,
+    //port: process.env.DATABASE_PORT,
+    define: {
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
+    }
 });
 
 try {

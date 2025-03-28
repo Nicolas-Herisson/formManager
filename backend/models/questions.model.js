@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../database/client";
+import sequelize from "../database/client.js";
 
 export default class Question extends Model {};
 
@@ -21,7 +21,7 @@ Question.init({
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
-    formTemplate_id: {
+    form_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }

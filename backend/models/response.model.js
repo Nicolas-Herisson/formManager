@@ -1,22 +1,23 @@
+import sequelize from "../database/client.js";
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../database/client";
 
-export default class TemplateForm extends Model {};
+export default class Response extends Model {};
 
-TemplateForm.init({
+Response.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
-        type: DataTypes.STRING,
+    question_id: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    description: {
+    response: {
         type: DataTypes.TEXT
     }
 }, {
     sequelize,
-    tableName: 'template_forms'
+    tableName: 'responses'
 });
+
