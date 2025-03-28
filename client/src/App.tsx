@@ -1,11 +1,30 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, CardAction } from "@/components/ui/card"
+import LeftPanel from "@/components/leftPanel"
+import RightPanel from "@/components/rightPanel/rightPanel"
+import { useEffect, useState } from "react";
+import { getForms } from "@/services/requests";
 
 function App() {
 
+  const [showRightPanel, setShowRightPanel] = useState(false);
+  //const [forms, setForms] = useState([]);
+
+  useEffect(() => {
+      async function fetchForms() {
+        const forms = await getForms();
+        if ( forms)
+          setShowRightPanel(true);
+        else
+          setShowRightPanel(false);
+      }
+      fetchForms();
+  }, []);
 
   return (
-    <>
-      <Card className="dark">
+    <div className="flex">
+       <LeftPanel showRightPanel={showRightPanel} setShowRightPanel={setShowRightPanel} />
+      {showRightPanel && <RightPanel />}
+     
+      {/* <Card className="dark">
         <CardHeader>
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description</CardDescription>
@@ -16,8 +35,8 @@ function App() {
       <CardFooter>
         <p>Card Footer</p>
       </CardFooter>
-    </Card>
-    </>
+    </Card> */}
+    </div>
   )
 }
 

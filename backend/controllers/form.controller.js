@@ -1,5 +1,5 @@
 export  function getForms(req, res) {
-    res.send('Hello World!');
+    res.send();
 }
 
 export  function createForm(req, res) {
