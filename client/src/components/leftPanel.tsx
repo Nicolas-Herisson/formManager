@@ -4,7 +4,7 @@ export default function LeftPanel({showRightPanel, setShowRightPanel} : ILeftPan
 
 
     return (
-        <div className="left-panel w-1/8 h-screen border-r border-solid border-gray-300 p-4 flex flex-col items-center">
+        <div className="left-panel w-1/8 h-screen overflow-hidden border-r border-solid border-gray-300 p-4 flex flex-col items-center">
             <Button onClick={() => !showRightPanel && setShowRightPanel(true)} className="mx-auto">Create form</Button>
         </div>
     );

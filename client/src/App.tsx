@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
       async function fetchForms() {
         const forms = await getForms();
-        if ( forms)
+        if ( forms.length > 0)
           setShowRightPanel(true);
         else
           setShowRightPanel(false);

@@ -9,7 +9,7 @@ Response.init({
         primaryKey: true,
         autoIncrement: true
     },
-    question_id: {
+    form_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
