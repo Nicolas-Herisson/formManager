@@ -6,17 +6,19 @@ import { createForm } from "../services/requests";
 
 export default function EditForm() {
     const [questions, setQuestions] = useState<QuestionType[]>([]);
+    const [id, setId] = useState<number>(0);
 
     function addQuestion() {
-        setQuestions([...questions, {id: questions.length, title: '', required: false, selector: 'checkbox', options: ["option"]}]);
+        setQuestions([...questions, {id: id, title: '', required: false, selector: 'checkbox', options: ["option"]}]);
+        setId(id + 1);
     };
 
-    function removeQuestion(index: number) {
-        setQuestions(questions.filter((_, i) => i !== index));
+    function removeQuestion(id: number) {
+        setQuestions(questions.filter((q) => q.id !== id));
     };
 
-    function updateQuestion(index: number, question: QuestionType) {
-        setQuestions(questions.map((q, i) => i === index ? question : q));
+    function updateQuestion(id: number, question: QuestionType) {
+        setQuestions(questions.map((q) => q.id === id ? question : q));
     };
     
     // function handleSubmit(formData: FormData) {
@@ -37,14 +39,14 @@ export default function EditForm() {
     }, []);
 
     return (
-        <div className="edit-form m-6 pb-6">
+        <div className="edit-form m-6 pb-6 w-7/8">
             <form className="flex flex-row gap-10" action="">
                 <div className="left-side flex flex-col gap-4">
                     <input type="text" name="title" id="title" placeholder="Title" />
                     <input type="text" name="description" id="description" placeholder="Description" />
 
                     {questions.map((question) => (
-                        <Question key={question.id} data={question} removeQuestion={removeQuestion} updateQuestion={updateQuestion} />
+                        <Question key={question.id} id={question.id} data={question} removeQuestion={removeQuestion} updateQuestion={updateQuestion} />
                     ))}
                     
                 </div>
