@@ -22,6 +22,7 @@ export async function getForms() {
 
 export async function createForm(form: Form) {
     try {
+        console.log(form);
         const {data} = await httpRequester.post('/forms', form);
 
         console.log(data);

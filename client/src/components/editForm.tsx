@@ -6,11 +6,11 @@ import { createForm } from "../services/requests";
 
 export default function EditForm() {
     const [questions, setQuestions] = useState<QuestionType[]>([]);
-    const [id, setId] = useState<number>(0);
+    const [questionId, setQuestionId] = useState<number>(0);
 
     function addQuestion() {
-        setQuestions([...questions, {id: id, title: '', required: false, selector: 'checkbox', options: ['']}]);
-        setId(id + 1);
+        setQuestions([...questions, {id: questionId, title: '', required: false, selector: 'checkbox', options: [{id: 0, title: "", checked: false}]}]);
+        setQuestionId(questionId + 1);
     };
 
     function removeQuestion(id: number) {
@@ -21,12 +21,12 @@ export default function EditForm() {
         setQuestions(questions.map((q) => q.id === id ? question : q));
     };
     
-    function handleSubmit(formData: FormData) {
+    async function handleSubmit(formData: FormData) {
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const form = {title, description, questions};
+        const form = {id: 0, title, description, questions};
 
-        createForm(form);
+        await createForm(form);
     }
 
     useEffect(() => {

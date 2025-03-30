@@ -1,4 +1,4 @@
-import {Form} from "../models/associations.model.js";
+import {Form, Question, Option} from "../models/associations.model.js";
 
 export async function getForms(req, res) {
     try {
@@ -17,8 +17,32 @@ export async function getForms(req, res) {
 export async function createForm(req, res) {
     try {
         const form = req.body;
+        const {title, description, questions} = form;
+        console.log(form);
 
-        const newForm = await Form.create(form);
+        const newForm = await Form.create(
+        {
+            title,
+            description,
+            questions: questions.map((question) => ({
+                description: question.description,
+                selector: question.selector,
+                required: question.required,
+                options: question.options.map((option) => ({
+                    title: option.title,
+                    checked: option.checked
+                }))
+            }))
+        },
+        {
+            include: [
+                {
+                    association: Question,
+                    include: [Option]
+                }
+            ]
+        }
+        );
 
         res.status(201).json(newForm);
     } catch (error) {
