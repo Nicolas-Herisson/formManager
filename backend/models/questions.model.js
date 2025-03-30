@@ -9,7 +9,7 @@ Question.init({
         primaryKey: true,
         autoIncrement: true
     },
-    description: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -23,7 +23,7 @@ Question.init({
     },
     form_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
     }
 }, {
     sequelize,

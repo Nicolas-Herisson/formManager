@@ -18,5 +18,5 @@ Form.init({
     }
 }, {
     sequelize,
-    tableName: 'template_forms'
+    tableName: 'forms'
 });

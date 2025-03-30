@@ -25,7 +25,7 @@ export async function createForm(req, res) {
             title,
             description,
             questions: questions.map((question) => ({
-                description: question.description,
+                title: question.title,
                 selector: question.selector,
                 required: question.required,
                 options: question.options.map((option) => ({
@@ -37,8 +37,12 @@ export async function createForm(req, res) {
         {
             include: [
                 {
-                    association: Question,
-                    include: [Option]
+                    association: 'questions',
+                    include: [
+                        {
+                            association: 'options'
+                        }
+                    ]
                 }
             ]
         }
@@ -46,7 +50,12 @@ export async function createForm(req, res) {
 
         res.status(201).json(newForm);
     } catch (error) {
+        console.error('Error creating form:', error);
+    if (error.name === 'SequelizeValidationError') {
+        res.status(400).json({ error: error.errors.map(e => e.message) });
+    } else {
         res.status(500).json({ error: error.message });
+    }
     }
 }
 
