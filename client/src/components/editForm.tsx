@@ -9,7 +9,7 @@ export default function EditForm() {
     const [id, setId] = useState<number>(0);
 
     function addQuestion() {
-        setQuestions([...questions, {id: id, title: '', required: false, selector: 'checkbox', options: ["option"]}]);
+        setQuestions([...questions, {id: id, title: '', required: false, selector: 'checkbox', options: ['']}]);
         setId(id + 1);
     };
 
@@ -21,26 +21,21 @@ export default function EditForm() {
         setQuestions(questions.map((q) => q.id === id ? question : q));
     };
     
-    // function handleSubmit(formData: FormData) {
-    //     const title = formData.get('title');
-    //     const description = formData.get('description');
+    function handleSubmit(formData: FormData) {
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const form = {title, description, questions};
 
-    //     createForm(formData, questions);
-    // }
+        createForm(form);
+    }
 
     useEffect(() => {
-        setQuestions([{
-            id: 0,
-            title: '',
-            required: false,
-            selector: 'checkbox',
-            options: ['option']
-        }]);
+        addQuestion();
     }, []);
 
     return (
         <div className="edit-form m-6 pb-6 w-7/8">
-            <form className="flex flex-row gap-10" action="">
+            <form className="flex flex-row gap-10" action={handleSubmit}>
                 <div className="left-side flex flex-col gap-4">
                     <input type="text" name="title" id="title" placeholder="Title" />
                     <input type="text" name="description" id="description" placeholder="Description" />

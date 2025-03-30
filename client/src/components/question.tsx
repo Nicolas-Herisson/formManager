@@ -20,7 +20,7 @@ export default function Question({id, data, removeQuestion, updateQuestion}: IQu
                 <input type="checkbox" name="required" id="required" checked={data.required} onChange={(e) => {updateQuestion(id, {...data, required: e.target.checked})}} />
             </label>
 
-            <select name="selector" id="selector" value={data.selector} onChange={(e) => {updateQuestion(id, {...data, selector: e.target.value}); setSelector(e.target.value); setOptions(["option"])}}>
+            <select name="selector" id="selector" value={data.selector} onChange={(e) => { updateQuestion(id, {...data, selector: e.target.value, options: ['']}); setSelector(e.target.value);}}>
                 <option value="checkbox">Checkbox</option>
                 <option value="radio">Radio</option>
                 <option value="text">Text</option>
@@ -29,7 +29,7 @@ export default function Question({id, data, removeQuestion, updateQuestion}: IQu
             <div className="flex flex-col gap-2">
                 {data.options.map((option, index) => (
                     <div key={index}>
-                    <input type="text" name={`option${index}`} id={`option${index}`}
+                    <input type="text" name={`option${index}`} id={`option${index}`} placeholder="Options"
                      value={option} onChange={(e) => {updateQuestion(id, {...data, options: data.options.map((opt, i) => i === index ? e.target.value : opt)});}} />
                     {selector === 'checkbox' || selector === 'radio' ? <input type={selector} name={`option${index}`} id={`option${index}`} placeholder="Options" /> : null}
                     { data.options.length > 1 && <button type="button" onClick={() => updateQuestion(id, {...data, options: data.options.filter((_, i) => i !== index)})}> 	&#128465;</button>}
@@ -37,7 +37,7 @@ export default function Question({id, data, removeQuestion, updateQuestion}: IQu
                 ))}
             </div>
 
-            <Button type="button" onClick={() => updateQuestion(id, {...data, options: [...data.options, "option"]})}>Add Option</Button>
+            <Button type="button" onClick={() => updateQuestion(id, {...data, options: [...data.options, ""]})}>Add Option</Button>
             
             </div>
     );

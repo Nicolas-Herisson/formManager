@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Question } from "../types/types";
+import type { Form } from "../types/types";
 
 export const httpRequester = axios.create({
     baseURL: "http://localhost:3000/api",
@@ -20,12 +20,7 @@ export async function getForms() {
     }
 }
 
-export async function createForm(formData: FormData, questions: Question[]) {
-    const form = {
-        title: formData.get('title') as string,
-        description: formData.get('description') as string,
-        questions
-    };
+export async function createForm(form: Form) {
     try {
         const {data} = await httpRequester.post('/forms', form);
 

@@ -14,8 +14,16 @@ export async function getForms(req, res) {
     }
 }
 
-export  function createForm(req, res) {
-    res.send('Hello World!');
+export async function createForm(req, res) {
+    try {
+        const form = req.body;
+
+        const newForm = await Form.create(form);
+
+        res.status(201).json(newForm);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 export  function getForm(req, res) {
