@@ -15,11 +15,9 @@ Option.init({
     },
     checked: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
     },
     question_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
     }
 }, {
     sequelize,

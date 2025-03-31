@@ -6,11 +6,10 @@ export const httpRequester = axios.create({
     withCredentials: true,
 });
 
-export async function getForms() {
+export async function fetchGetForms() {
     try {
         const {data} = await httpRequester.get('/forms');
 
-        console.log(data);
 
         return data;
     } catch (error) {
@@ -20,16 +19,49 @@ export async function getForms() {
     }
 }
 
-export async function createForm(form: Form) {
+export async function fetchGetForm(id: number) {
     try {
-        console.log(form);
+        const {data} = await httpRequester.get(`/forms/${id}`);
+        return data;
+    } catch (error) {
+        console.error('Error fetching form:', error);
+        return null;
+        //throw error;
+    }
+}
+
+export async function fetchCreateForm(form: Form) {
+    try {
+
         const {data} = await httpRequester.post('/forms', form);
 
-        console.log(data);
 
         return data;
     } catch (error) {
         console.error('Error creating form:', error);
+        return null;
+        //throw error;
+    }
+}
+
+export async function fetchDeleteForm(id: number) {
+    try {
+        const {data} = await httpRequester.delete(`/forms/${id}`);
+
+        return data;
+    } catch (error) {
+        console.error('Error deleting form:', error);
+        return null;
+        //throw error;
+    }
+}
+
+export async function fetchUpdateForm(id: number, form: Form) {
+    try {
+        const {data} = await httpRequester.put(`/forms/${id}`, form);
+        return data;
+    } catch (error) {
+        console.error('Error updating form:', error);
         return null;
         //throw error;
     }

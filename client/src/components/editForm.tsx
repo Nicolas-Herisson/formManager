@@ -1,32 +1,36 @@
 import { Button } from "@/components/ui/button";
 import Question from "./question";
 import type { Question as QuestionType } from "../types/types";
-import { useEffect, useState } from "react";
-import { createForm } from "../services/requests";
+import { useEffect } from "react";
+import { fetchGetForm } from "../services/requests";
+import type { Form } from "@/types/types";
 
-export default function EditForm() {
-    const [questions, setQuestions] = useState<QuestionType[]>([]);
-    const [questionId, setQuestionId] = useState<number>(0);
+export default function EditForm({form, setForm, updateForm, addForm}: IEditFormProps) {
 
     function addQuestion() {
-        setQuestions([...questions, {id: questionId, title: '', required: false, selector: 'checkbox', options: [{id: 0, title: "", checked: false}]}]);
-        setQuestionId(questionId + 1);
+        setForm({...form, questions: [...form.questions, {id: form.questions.length + 1, title: '', required: false, selector: 'checkbox', options: [{id: 0, title: "", checked: false}]}]});
     };
 
     function removeQuestion(id: number) {
-        setQuestions(questions.filter((q) => q.id !== id));
+        setForm({...form, questions: form.questions.filter((q) => q.id !== id)});
     };
 
     function updateQuestion(id: number, question: QuestionType) {
-        setQuestions(questions.map((q) => q.id === id ? question : q));
+        setForm({...form, questions: form.questions.map((q) => q.id === id ? question : q)});
     };
     
     async function handleSubmit(formData: FormData) {
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const form = {id: 0, title, description, questions};
+        const newForm = {id: form.id, title, description, questions: form.questions};
 
-        await createForm(form);
+        const oldForm = await fetchGetForm(form.id);
+
+        if (oldForm) {
+            await updateForm(oldForm.id, newForm);
+        } else {
+            await addForm(newForm);
+        }
     }
 
     useEffect(() => {
@@ -37,10 +41,10 @@ export default function EditForm() {
         <div className="edit-form m-6 pb-6 w-7/8">
             <form className="flex flex-row gap-10" action={handleSubmit}>
                 <div className="left-side flex flex-col gap-4">
-                    <input type="text" name="title" id="title" placeholder="Title" />
-                    <input type="text" name="description" id="description" placeholder="Description" />
+                    <input type="text" name="title" id="title" placeholder="Title" value={form.title} onChange={(e) => {setForm({...form, title: e.target.value})}} />
+                    <input type="text" name="description" id="description" placeholder="Description" value={form.description} onChange={(e) => {setForm({...form, description: e.target.value})}} />
 
-                    {questions.map((question) => (
+                    {form.questions.map((question) => (
                         <Question key={question.id} id={question.id} data={question} removeQuestion={removeQuestion} updateQuestion={updateQuestion} />
                     ))}
                     
@@ -53,4 +57,11 @@ export default function EditForm() {
             </form>
         </div>
     );
+}
+
+interface IEditFormProps {
+    form: Form;
+    setForm: React.Dispatch<React.SetStateAction<Form>>;
+    updateForm: (id: number, form: Form) => void;
+    addForm: (form: Form) => void;
 }

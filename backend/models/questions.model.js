@@ -15,15 +15,12 @@ Question.init({
     },
     selector: {
         type: DataTypes.TEXT,
-        allowNull: false
     },
     required: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
     },
     form_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
     }
 }, {
     sequelize,

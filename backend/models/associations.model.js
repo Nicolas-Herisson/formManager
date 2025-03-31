@@ -36,13 +36,15 @@ Question.hasMany(Response, {
     as: 'responses',
     foreignKey: 'question_id',
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE' });
+    onUpdate: 'CASCADE' 
+});
     
 Response.belongsTo(Question, { 
     as: 'question',
     foreignKey: 'question_id',
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE' });
+    onUpdate: 'CASCADE' 
+});
 
 
 export {
