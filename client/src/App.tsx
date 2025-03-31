@@ -22,9 +22,7 @@ function App() {
 
   async function updateForm(id: number, form: Form) {
     await fetchUpdateForm(id, form);
-    console.log("in updateForm : ", form);
     setForms((prevForms) => prevForms.map((f) => f.id === id ? form : f));
-    console.log("in updateForm : ", forms);
   }
 
   useEffect(() => {
