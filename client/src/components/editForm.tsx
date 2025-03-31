@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
-import Question from "./question";
+import Question from "./form/question";
 import type { Question as QuestionType } from "../types/types";
-import { useEffect } from "react";
 import { fetchGetForm } from "../services/requests";
 import type { Form } from "@/types/types";
 
 export default function EditForm({form, setForm, updateForm, addForm}: IEditFormProps) {
-
+    
     function addQuestion() {
         setForm({...form, questions: [...form.questions, {id: form.questions.length + 1, title: '', required: false, selector: 'checkbox', options: [{id: 0, title: "", checked: false}]}]});
     };
@@ -26,16 +25,13 @@ export default function EditForm({form, setForm, updateForm, addForm}: IEditForm
 
         const oldForm = await fetchGetForm(form.id);
 
+
         if (oldForm) {
             await updateForm(oldForm.id, newForm);
         } else {
             await addForm(newForm);
         }
     }
-
-    useEffect(() => {
-        addQuestion();
-    }, []);
 
     return (
         <div className="edit-form m-6 pb-6 w-7/8">

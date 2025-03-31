@@ -1,4 +1,4 @@
-import type { Option } from "../types/types";
+import type { Option } from "../../types/types";
 import { Button } from "@/components/ui/button";
 
 export default function SelectorOption({id, selector, data, removeOption, updateOption}: ISelectorOption) {

@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { Question as QuestionType } from "../types/types";
-import type { Option } from "../types/types";
+import type { Question as QuestionType } from "../../types/types";
+import type { Option } from "../../types/types";
 import SelectorOption from "./selectorOption";
 
 export default function Question({id, data, removeQuestion, updateQuestion}: IQuestion) {
-    const [optionId, setOptionId] = useState<number>(1);
 
     function addOption() {
-        const newOption = {id: optionId, title: "", checked: false};
+        const newOption = {id: data.options.length + 1, title: "", checked: false};
         updateQuestion(id, {...data, options: [...data.options, newOption]});
-        setOptionId(optionId + 1);
     };
 
     function removeOption(optionId: number) {
@@ -20,12 +17,11 @@ export default function Question({id, data, removeQuestion, updateQuestion}: IQu
     function updateOption(optionId: number, option: Option) {
         updateQuestion(id, {...data, options: data.options.map((opt) => opt.id === optionId ? option : opt)});
     };
-    // const [options, setOptions] = useState<string[]>(["option"]);
 
 
     return (
         <div className="question flex flex-col gap-2 border p-2 rounded w-150">
-
+{}
             <div className="flex items-center justify-between">
                 <input className="w-100" type="text" name="title" id="title" placeholder="Title" value={data.title} onChange={(e) => {updateQuestion(id, {...data, title: e.target.value})}} />
                 <Button type="button" className="size-8 self-end" onClick={() => removeQuestion(id)}>X</Button>

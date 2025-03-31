@@ -22,7 +22,9 @@ function App() {
 
   async function updateForm(id: number, form: Form) {
     await fetchUpdateForm(id, form);
+    console.log("in updateForm : ", form);
     setForms((prevForms) => prevForms.map((f) => f.id === id ? form : f));
+    console.log("in updateForm : ", forms);
   }
 
   useEffect(() => {
@@ -34,25 +36,12 @@ function App() {
         }
     }
     fetchForms();
-}, []);
+}, [forms]);
 
   return (
     <div className="flex">
        <LeftPanel setShowRightPanel={setShowRightPanel} forms={forms} setSelectedForm={setSelectedForm} deleteForm={deleteForm}/>
       {showRightPanel && <RightPanel form={selectedForm} setForm={setSelectedForm} updateForm={updateForm} addForm={addForm}/>}
-     
-      {/* <Card className="dark">
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
-    </Card> */}
     </div>
   )
 }
