@@ -19,11 +19,6 @@ export interface Option {
     checked: boolean;
 }
 
-export interface OptionToSend {
-    title: string;
-    checked: boolean;
-}
-
 export interface Form {
     id: number;
     title: string;
@@ -31,17 +26,7 @@ export interface Form {
     questions: Question[];
 }
 
-export interface FormToSend {
-    title: string;
-    description: string;
-    questions: Question[];
-}
-
 export type AnswerValue = string | number | number[];
-export interface Answer {
-    questionId: number;
-    value: AnswerValue;
-}
 
 export type AnswerMap = Record<number, AnswerValue>;
 
