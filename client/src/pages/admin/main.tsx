@@ -1,0 +1,56 @@
+import LeftPanel from "./leftPanel"
+import RightPanel from "./rightPanel/rightPanel"
+import type { Form } from "@/types/types";
+import { useState, useEffect, useCallback } from "react";
+import { fetchGetForms, fetchCreateForm, fetchDeleteForm, fetchUpdateForm } from "@/services/formRequests";
+
+function MainPage() {
+
+  const [showRightPanel, setShowRightPanel] = useState(false);
+  const [forms, setForms] = useState<Form[]>([]);
+  const [selectedForm, setSelectedForm] = useState<Form>({id: -Date.now(), title: '', description: '', questions: []});
+
+  async function addForm(form: Form) {
+
+    const formToSend = { ...form, id: form.id > 0 ? form.id : -Date.now() };
+
+    await fetchCreateForm(formToSend);
+    setForms(await fetchGetForms());
+  }
+
+  async function deleteForm(id: number) {
+    
+    await fetchDeleteForm(id);
+    setForms(await fetchGetForms());
+  }
+
+  async function updateForm(form: Form) {
+    
+    await fetchUpdateForm(form);
+    setForms(await fetchGetForms());
+    
+  }
+
+  const fetchForms = useCallback(async () => {
+
+    const fetchedForms = await fetchGetForms();
+
+    if (fetchedForms.length > 0)
+        setForms(fetchedForms);
+    
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    fetchForms();
+}, [selectedForm]);
+
+  return (
+    <div className="flex">
+       <LeftPanel setShowRightPanel={setShowRightPanel} forms={forms} setSelectedForm={setSelectedForm} deleteForm={deleteForm}/>
+      {showRightPanel && <RightPanel form={selectedForm} setForm={setSelectedForm} updateForm={updateForm} addForm={addForm} selectedForm={selectedForm} />}
+    </div>
+  )
+}
+
+export default MainPage;

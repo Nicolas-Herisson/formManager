@@ -6,8 +6,20 @@ export interface Question {
     options: Option[];
 }
 
+export interface QuestionToSend {
+    title: string;
+    required: boolean;
+    selector: string;
+    options: Option[];
+}
+
 export interface Option {
     id: number;
+    title: string;
+    checked: boolean;
+}
+
+export interface OptionToSend {
     title: string;
     checked: boolean;
 }
@@ -17,4 +29,28 @@ export interface Form {
     title: string;
     description: string;
     questions: Question[];
+}
+
+export interface FormToSend {
+    title: string;
+    description: string;
+    questions: Question[];
+}
+
+export interface Answer {
+    questionId: number;
+    value: string | number | number[];
+}
+
+export interface Response {
+    id?: number;
+    form_id: number;
+    response: string;
+}
+
+export interface ParsedResponse {
+    id: number;
+    form_id: number;
+    response: string;
+    parsed: Record<number, string | number | number[]>;
 }

@@ -18,6 +18,7 @@ Option.init({
     },
     question_id: {
         type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     sequelize,
