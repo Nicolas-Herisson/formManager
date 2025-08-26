@@ -2,95 +2,130 @@ import { Button } from "@/components/ui/button";
 import type { Question as QuestionType } from "../../../types/types";
 import type { Option } from "../../../types/types";
 import SelectorOption from "./selectorOption";
-import { Trash2 } from "lucide-react";
+import { Trash2, ChevronDown } from "lucide-react";
 
 export default function Question({id, data, removeQuestion, updateQuestion, questionNumber}: IQuestion) {
-    
     function addOption() {
         const newOption = {id: data.options.length + 1, title: "", checked: false};
         updateQuestion(id, {...data, options: [...data.options, newOption]});
-    };
+    }
 
     function removeOption(optionId: number) {
-        updateQuestion(id, {...data, options: data.options.filter((opt) => opt.id !== optionId)});
-    };
+        updateQuestion(id, {...data, options: data.options.filter(opt => opt.id !== optionId)});
+    }
 
     function updateOption(optionId: number, option: Option) {
         updateQuestion(id, {...data, options: data.options.map((opt) => opt.id === optionId ? option : opt)});
-    };
+    }
 
     return (
-        <div className="question flex flex-col gap-4 p-4 border border-gray-200 rounded-lg bg-white">
-            <Button 
-                type="button" 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => removeQuestion(id)}
-                className="text-red-600 hover:bg-red-50 hover:text-red-700 self-end"
-                title="Supprimer la question"
-            >
-                <Trash2 size={16} />
-            </Button>
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 flex-1">
-                    <span className="font-medium text-gray-600">{questionNumber}.</span>
-                    <input 
-                        type="text" 
-                        name="title" 
-                        id="title" 
-                        placeholder="Titre de la question" 
-                        value={data.title} 
-                        onChange={(e) => {updateQuestion(id, {...data, title: e.target.value})}}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
-                    />
+        <div className="space-y-6 p-6 border-2 border-gray-100 rounded-lg bg-white shadow-sm hover:shadow transition-shadow">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+                <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-gray-800">
+                        Question {questionNumber}
+                    </h3>
+                </div>
+                <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => removeQuestion(id)}
+                    className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                    title="Supprimer la question"
+                >
+                    <Trash2 size={16} />
+                </Button>
+            </div>
+
+            {/* Question title */}
+            <div className="space-y-2">
+                <label htmlFor={`title-${id}`} className="block text-sm font-medium text-gray-700">
+                    Intitulé de la question
+                </label>
+                <input
+                    type="text"
+                    id={`title-${id}`}
+                    placeholder="Ex: Quel est votre nom ?"
+                    value={data.title}
+                    onChange={(e) => updateQuestion(id, {...data, title: e.target.value})}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                    required
+                />
+            </div>
+
+            {/* Question type */}
+            <div className="space-y-2">
+                <label htmlFor={`selector-${id}`} className="block text-sm font-medium text-gray-700">
+                    Type de question
+                </label>
+                <div className="relative">
+                    <select
+                        id={`selector-${id}`}
+                        className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md appearance-none"
+                        value={data.selector}
+                        onChange={(e) => updateQuestion(id, {
+                            ...data, 
+                            selector: e.target.value,
+                            options: e.target.value === 'text' ? [] : [{id: 0, title: "", checked: false}]
+                        })}
+                    >
+                        <option value="text">Réponse courte</option>
+                        <option value="radio">Choix unique</option>
+                        <option value="checkbox">Choix multiples</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <ChevronDown className="h-4 w-4" />
+                    </div>
                 </div>
             </div>
 
-            <label htmlFor={`required-${id}`} className="flex items-center gap-2 text-sm text-gray-700">
-                <input 
-                    type="checkbox" 
-                    id={`required-${id}`} 
-                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                    checked={data.required} 
-                    onChange={(e) => {updateQuestion(id, {...data, required: e.target.checked})}} 
-                />
-                Requis
-            </label>
-
-            <select 
-                name="selector" 
-                id={`selector-${id}`}
-                className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                value={data.selector} 
-                onChange={(e) => { updateQuestion(id, {...data, selector: e.target.value, options: [{id: 0, title: "", checked: false}]}); }}
-            >
-                <option value="checkbox">Cases à cocher</option>
-                <option value="radio">Boutons radio</option>
-                <option value="text">Champ texte</option>
-            </select>
-
-            <div className="flex flex-col gap-2">
-                {data.selector === 'checkbox' || data.selector === 'radio' ? data.options.map((option) => (
-                    <div key={option.id}>
-                        <SelectorOption id={option.id} data={option} removeOption={removeOption} updateOption={updateOption} />
+            {/* Options */}
+            {data.selector !== 'text' && (
+                <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Options
+                        </label>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={addOption}
+                            className="text-sm text-blue-600 hover:bg-blue-50"
+                        >
+                            + Ajouter une option
+                        </Button>
                     </div>
-                )) : null}
-            </div>
-
-            {(data.selector === 'checkbox' || data.selector === 'radio') && (
-                <Button 
-                    type="button" 
-                    variant="outline"
-                    onClick={addOption}
-                    className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                        <path d="M5 12h14"/>
-                        <path d="M12 5v14"/>
-                    </svg>
-                    Ajouter une option
-                </Button>
+                    
+                    <div className="space-y-3">
+                        {data.options.map((option) => (
+                            <SelectorOption
+                                key={option.id}
+                                id={option.id}
+                                data={option}
+                                removeOption={removeOption}
+                                updateOption={updateOption}
+                            />
+                        ))}
+                    </div>
+                </div>
             )}
+
+            {/* Required */}
+            <div className="flex items-center pt-2">
+                <input
+                    type="checkbox"
+                    id={`required-${id}`}
+                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    checked={data.required}
+                    onChange={(e) => updateQuestion(id, {...data, required: e.target.checked})}
+                />
+                <label htmlFor={`required-${id}`} className="ml-2 block text-sm text-gray-700">
+                    Requis
+                </label>
+            </div>
         </div>
     );
 }

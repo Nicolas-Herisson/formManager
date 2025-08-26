@@ -12,7 +12,7 @@ export default function calculateResponseStats(responses: ParsedResponse[], ques
 
         if (val === undefined) continue;
 
-        if (question.selector === "radio" || question.selector === "select") {
+        if (question.selector === "radio") {
 
             const opt = question.options.find(o => o.id === val);
 
@@ -40,6 +40,6 @@ export default function calculateResponseStats(responses: ParsedResponse[], ques
             } 
         }  
         const percentage = calculPercentage(responsesByQuestion, totalOptions);
-        
+
         return {percentage, responsesByQuestion};
     }
