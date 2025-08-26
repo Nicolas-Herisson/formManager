@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { Form, Question } from "@/types/types";
+import type { Form, Question, AnswerMap, AnswerValue } from "@/types/types";
 import { fetchGetForm } from "@/services/formRequests";
 import {fetchCreateResponse} from "@/services/responseRequests";
 import { useParams } from "react-router";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export function FormPage() {
 
     const [form, setForm] = useState<Form | null>(null);
-    const [answers, setAnswers] = useState<Record<number, string | number | number[]>>({});
+    const [answers, setAnswers] = useState<AnswerMap>({});
     const formId = useParams<{ id: string }>().id;
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
@@ -26,7 +26,7 @@ export function FormPage() {
         fetchForm();
     }, [formId]);
 
-    const handleChange = (question: Question, value: string | number) => {
+    const handleChange = (question: Question, value: AnswerValue) => {
         setAnswers((prev) => ({ ...prev, [question.id]: value }));
     };
 

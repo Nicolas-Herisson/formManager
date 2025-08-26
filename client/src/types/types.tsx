@@ -37,10 +37,13 @@ export interface FormToSend {
     questions: Question[];
 }
 
+export type AnswerValue = string | number | number[];
 export interface Answer {
     questionId: number;
-    value: string | number | number[];
+    value: AnswerValue;
 }
+
+export type AnswerMap = Record<number, AnswerValue>;
 
 export interface Response {
     id?: number;
