@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as responseController from "../controllers/response.controller.js";
-import sanitizer from "../middlewares/sanitizer.mw.js";
+import { sanitizer } from "../middlewares/sanitizer.mw.js";
 
 const responseRouter = Router();
 

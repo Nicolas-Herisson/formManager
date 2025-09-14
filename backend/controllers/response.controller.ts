@@ -1,7 +1,8 @@
-import { Response } from "../models/associations.model.js";
-import { Form } from "../models/associations.model.js";
+import { Response as ResponseModel } from "../models/associations.model";
+import { Form } from "../models/associations.model";
+import { Request, Response as ExpressResponse } from "express";
 
-export async function createResponse(req, res) {
+export async function createResponse(req: Request, res: ExpressResponse) {
     try {
         const { form_id, response } = req.body;
 
@@ -11,50 +12,50 @@ export async function createResponse(req, res) {
             return res.status(404).json({ error: 'Form not found' });
         }
         
-        const newResponse = await Response.create({ form_id, response });
+        const newResponse = await ResponseModel.create({ form_id, response });
 
         res.status(201).json(newResponse);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error creating response:', error);
         res.status(500).json({ error: error.message });
     }
 }
 
-export async function getResponses(req, res) {
+export async function getResponses(req: Request, res: ExpressResponse) {
     try {
 
         const { form_id } = req.params;
-        const responses = await Response.findAll({ where: { form_id } });
+        const responses = await ResponseModel.findAll({ where: { form_id } });
 
         res.status(200).json(responses);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching responses:', error);
         res.status(500).json({ error: error.message });
     }
 }
 
-export async function getResponse(req, res) {
+export async function getResponse(req: Request, res: ExpressResponse) {
     try {
         
         const { form_id, response_id } = req.params;
-        const response = await Response.findOne({ where: { form_id, id: response_id } });
+        const response = await ResponseModel.findOne({ where: { form_id, id: response_id } });
         
         if (!response) {
             return res.status(404).json({ error: 'Response not found' });
         }
         
         res.status(200).json(response);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching response:', error);
         res.status(500).json({ error: error.message });
     }
 }
 
-export async function deleteResponse(req, res) {
+export async function deleteResponse(req: Request, res: ExpressResponse) {
     try {
         
         const { form_id, response_id } = req.params;
-        const response = await Response.findOne({ where: { form_id, id: response_id } });
+        const response = await ResponseModel.findOne({ where: { form_id, id: response_id } });
         
         if (!response) {
             return res.status(404).json({ error: 'Response not found' });
@@ -62,34 +63,34 @@ export async function deleteResponse(req, res) {
         
         await response.destroy();
         res.status(204).send();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting response:', error);
         res.status(500).json({ error: error.message });
     }
 }
 
-export async function deleteResponsesByFormId(req, res) {
+export async function deleteResponsesByFormId(req: Request, res: ExpressResponse) {
     try {
         
         const { form_id } = req.params;
-        const responses = await Response.findAll({ where: { form_id } });
+        const responses = await ResponseModel.findAll({ where: { form_id } });
         
         await Promise.all(responses.map(response => response.destroy()));
         
         res.status(204).send();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting responses:', error);
         res.status(500).json({ error: error.message });
     }
 }
 
-export async function updateResponse(req, res) {
+export async function updateResponse(req: Request, res: ExpressResponse) {
     try {
         
         const { form_id, response_id } = req.params;
         const { response } = req.body;
         
-        const existingResponse = await Response.findOne({ where: { form_id, id: response_id } });
+        const existingResponse = await ResponseModel.findOne({ where: { form_id, id: response_id } });
         
         if (!existingResponse) {
             return res.status(404).json({ error: 'Response not found' });
@@ -99,7 +100,7 @@ export async function updateResponse(req, res) {
         await existingResponse.save();
         
         res.status(200).json(existingResponse);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error updating response:', error);
         res.status(500).json({ error: error.message });
     }
