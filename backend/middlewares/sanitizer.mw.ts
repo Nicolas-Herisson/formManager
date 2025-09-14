@@ -10,7 +10,7 @@ export const sanitizer = (req: Request, _res: Response, next: NextFunction) => {
   next();
 };
 
-// Fonction pour nettoyer un objet si c'est un string au format key/value ou un array
+
 const sanitizeObject = (obj: Record<string, string | string[]>) => {
   for (const key in obj) {
     const value = obj[key];
@@ -27,7 +27,7 @@ const sanitizeObject = (obj: Record<string, string | string[]>) => {
   return obj;
 };
 
-// Fonction pour nettoyer une string
+
 const sanitizeString = (str: string) => {
   if (typeof str !== 'string') return str;
   if (str !== 'password' && str !== 'email' && str !== 'passwordConfirm') {
@@ -36,7 +36,7 @@ const sanitizeString = (str: string) => {
   return str;
 };
 
-// Fonction pour nettoyer un array
+
 const sanitizeArray = (arr: string[]) => {
   return arr.map((item) => {
     if (item !== 'password' && item !== 'email' && item !== 'passwordConfirm') {
