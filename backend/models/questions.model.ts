@@ -1,18 +1,15 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/client";
-import type { IQuestion } from "../@types/question";
-import type { ICreateOption, IOption } from "../@types/option";
+import type { IQuestion, ICreateQuestion } from "../@types/question";
+import Option from "./option";
 
-export default class Question extends Model implements IQuestion{
+export default class Question extends Model<IQuestion, ICreateQuestion> implements IQuestion{
     public id!: number;
     public title!: string;
     public selector!: string;
     public required!: boolean;
     public form_id!: number;
-    public options?: IOption[];
-
-    declare createOption: (option: ICreateOption) => Promise<IOption>;
-    declare destroy: () => Promise<void>;
+    public options?: Option[];
 };
 
 Question.init({

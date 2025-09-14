@@ -3,18 +3,12 @@ export interface IQuestion {
     title: string;
     selector: string;
     required: boolean;
-    form_id?: number;
-    options?: IOption[]; 
-    createdAt?: Date;
-    updatedAt?: Date;
-
-    createOption?: (option: ICreateOption) => Promise<IOption>;
-    update?: (values: Partial<IQuestion>) => Promise<this>;
-    destroy?: () => Promise<void>;
+    form_id: number;
 }
 
-export interface ICreateQuestion {
+export interface ICreateQuestion extends Optional<IQuestion, 'id' | 'createdAt' | 'updatedAt' | 'options'> {
     title: string;
     selector: string;
     required: boolean;
+    form_id: number;
 }

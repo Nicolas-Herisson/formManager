@@ -22,6 +22,8 @@ function MainPage() {
     
     await fetchDeleteForm(id);
     setForms(await fetchGetForms());
+    if (selectedForm.id === id)
+        setSelectedForm({id: -Date.now(), title: '', description: '', questions: []});
   }
 
   async function updateForm(form: Form) {
@@ -43,7 +45,7 @@ function MainPage() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchForms();
-}, [selectedForm]);
+}, []);
 
   return (
     <div className="flex">

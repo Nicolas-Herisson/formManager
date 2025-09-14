@@ -1,15 +1,13 @@
+import { Optional } from "sequelize";
+
 export interface IOption {
-    id?: number;
+    id: number;
     title: string;
     checked: boolean;
-    question_id?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
-    update?: (values: Partial<IOption>) => Promise<this>;
-    destroy?: () => Promise<void>;
+    question_id: number;
 }
 
-export interface ICreateOption {
+export interface ICreateOption extends Optional<IOption, 'id' | 'createdAt' | 'updatedAt'> {
     title: string;
     checked: boolean;
 }

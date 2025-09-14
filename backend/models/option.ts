@@ -1,20 +1,14 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/client";
-import type { IOption } from "../@types/option";
+import type { IOption, ICreateOption } from "../@types/option";
 
-export default class Option extends Model implements IOption {
-    id: number;
-    title: string;
-    checked: boolean;
-    question_id: number;
-
-    constructor(id?: number, title?: string, checked?: boolean, question_id?: number) {
-        super();
-        this.id = id || 0;
-        this.title = title || "";
-        this.checked = checked || false;
-        this.question_id = question_id || 0;
-    }
+export default class Option extends Model<IOption, ICreateOption> implements IOption {
+    public id!: number;
+    public title!: string;
+    public checked!: boolean;
+    public question_id!: number;
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
 };
 
 Option.init({
