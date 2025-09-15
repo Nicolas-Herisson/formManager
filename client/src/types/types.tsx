@@ -28,17 +28,17 @@ export interface Form {
 
 export type AnswerValue = string | number | number[];
 
-export type AnswerMap = Record<number, AnswerValue>;
+export type AnswerMap = Record<string, AnswerValue>;
 
 export interface Response {
     id?: number;
     form_id: number;
-    response: string;
+    response: string | AnswerMap;
 }
 
 export interface ParsedResponse {
     id: number;
     form_id: number;
     response: string;
-    parsed: Record<number, string | number | number[]>;
+    parsed: Record<string, string | number | number[]>;
 }

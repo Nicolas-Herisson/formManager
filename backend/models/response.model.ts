@@ -3,16 +3,10 @@ import { DataTypes, Model } from "sequelize";
 import type { IResponse } from "../@types/response";
 
 export default class Response extends Model implements IResponse {
-    id: number;
-    form_id: number;
-    response: string;
+    public id!: number;
+    public form_id!: number;
+    public response!: string;
 
-    constructor(id?: number, form_id?: number, response?: string) {
-        super();
-        this.id = id || 0;
-        this.form_id = form_id || 0;
-        this.response = response || "";
-    }
 };
 
 Response.init({
@@ -26,7 +20,7 @@ Response.init({
         allowNull: false
     },
     response: {
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
     }
 }, {
     sequelize,

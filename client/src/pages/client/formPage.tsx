@@ -27,7 +27,7 @@ export function FormPage() {
     }, [formId]);
 
     const handleChange = (question: Question, value: AnswerValue) => {
-        setAnswers((prev) => ({ ...prev, [question.id]: value }));
+        setAnswers((prev) => ({ ...prev, [String(question.id)]: value }));
     };
 
     const handleOptionChange = (question: Question, optionId: number, checked: boolean) => {
@@ -36,17 +36,17 @@ export function FormPage() {
 
             setAnswers((prev) => {
 
-                const prevValue = prev[question.id];
+                const prevValue = prev[String(question.id)];
                 const prevArr: number[] = Array.isArray(prevValue) ? prevValue : [];
 
                 if (checked) {
-                    return { ...prev, [question.id]: [...prevArr, optionId] };
+                    return { ...prev, [String(question.id)]: [...prevArr, optionId] };
                 } else {
-                    return { ...prev, [question.id]: prevArr.filter((id) => id !== optionId) };
+                    return { ...prev, [String(question.id)]: prevArr.filter((id) => id !== optionId) };
                 }
             });
         } else if (question.selector === "radio") {
-            setAnswers((prev) => ({ ...prev, [question.id]: optionId }));
+            setAnswers((prev) => ({ ...prev, [String(question.id)]: optionId }));
         }
     };
 
@@ -59,7 +59,7 @@ export function FormPage() {
         if (form) {
             for (const q of form.questions) {
                 if (q.required) {
-                    const val = answers[q.id];
+                    const val = answers[String(q.id)];
                     if (
                         val === undefined ||
                         (q.selector === "text" && String(val).trim() === "") ||
@@ -71,7 +71,8 @@ export function FormPage() {
                     }
                 }
             }
-            await fetchCreateResponse({ form_id: form.id, response: JSON.stringify(answers) });
+
+            await fetchCreateResponse({ form_id: form.id, response: answers });
         }
 
         setSuccess(true);

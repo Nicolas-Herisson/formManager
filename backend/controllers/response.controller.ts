@@ -11,10 +11,10 @@ export async function createResponse(req: Request, res: ExpressResponse) {
         if (!findedForm) {
             return res.status(404).json({ error: 'Form not found' });
         }
-        
-        const newResponse = await ResponseModel.create({ form_id, response });
 
-        res.status(201).json(newResponse);
+        const newResponse = await ResponseModel.create({ form_id, response: JSON.stringify(response) });
+
+        res.status(201).json(newResponse.dataValues);
     } catch (error: any) {
         console.error('Error creating response:', error);
         res.status(500).json({ error: error.message });
@@ -23,9 +23,9 @@ export async function createResponse(req: Request, res: ExpressResponse) {
 
 export async function getResponses(req: Request, res: ExpressResponse) {
     try {
-
         const { form_id } = req.params;
-        const responses = await ResponseModel.findAll({ where: { form_id } });
+
+        const responses = await ResponseModel.findAll({ where: { form_id }, raw: true });
 
         res.status(200).json(responses);
     } catch (error: any) {
@@ -36,10 +36,10 @@ export async function getResponses(req: Request, res: ExpressResponse) {
 
 export async function getResponse(req: Request, res: ExpressResponse) {
     try {
-        
         const { form_id, response_id } = req.params;
+
         const response = await ResponseModel.findOne({ where: { form_id, id: response_id } });
-        
+                
         if (!response) {
             return res.status(404).json({ error: 'Response not found' });
         }
@@ -53,8 +53,8 @@ export async function getResponse(req: Request, res: ExpressResponse) {
 
 export async function deleteResponse(req: Request, res: ExpressResponse) {
     try {
-        
         const { form_id, response_id } = req.params;
+
         const response = await ResponseModel.findOne({ where: { form_id, id: response_id } });
         
         if (!response) {
@@ -62,6 +62,7 @@ export async function deleteResponse(req: Request, res: ExpressResponse) {
         }
         
         await response.destroy();
+
         res.status(204).send();
     } catch (error: any) {
         console.error('Error deleting response:', error);
@@ -71,8 +72,8 @@ export async function deleteResponse(req: Request, res: ExpressResponse) {
 
 export async function deleteResponsesByFormId(req: Request, res: ExpressResponse) {
     try {
-        
         const { form_id } = req.params;
+
         const responses = await ResponseModel.findAll({ where: { form_id } });
         
         await Promise.all(responses.map(response => response.destroy()));
@@ -86,7 +87,6 @@ export async function deleteResponsesByFormId(req: Request, res: ExpressResponse
 
 export async function updateResponse(req: Request, res: ExpressResponse) {
     try {
-        
         const { form_id, response_id } = req.params;
         const { response } = req.body;
         
@@ -96,7 +96,8 @@ export async function updateResponse(req: Request, res: ExpressResponse) {
             return res.status(404).json({ error: 'Response not found' });
         }
         
-        existingResponse.response = JSON.stringify(response);
+        existingResponse.response = response;
+        
         await existingResponse.save();
         
         res.status(200).json(existingResponse);
