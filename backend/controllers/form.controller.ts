@@ -9,28 +9,33 @@ export async function createForm(req: Request, res: ExpressResponse) {
         const newForm = await Form.create({ title, description });
 
         const createdQuestions = await Promise.all(
+
             questions.map(async (question: Question) => {
+
                 const createdQuestion = await Question.create({
                     title: question.title,
                     selector: question.selector,
                     required: question.required,
                     form_id: newForm.dataValues.id,
                 });
+
                 return createdQuestion;
             })
         );
 
-for (const question of questions) {
-    await Promise.all(
-        question.options.map(async (option: Option) => {
-            return await Option.create({
-                title: option.title,
-                checked: option.checked,
-                question_id: createdQuestions.find((q: Question) => q.dataValues.title === question.title)?.dataValues.id,
-            });
-        })
-    );
-}
+        for (const question of questions) {
+
+            await Promise.all(
+                question.options.map(async (option: Option) => {
+
+                    return await Option.create({
+                        title: option.title,
+                        checked: option.checked,
+                        question_id: createdQuestions.find((q: Question) => q.dataValues.title === question.title)?.dataValues.id,
+                    });
+                })
+            );
+        }
 
         const createdForm = await Form.findByPk(newForm.dataValues.id, {
             include: [
@@ -109,17 +114,12 @@ export async function updateForm(req: Request, res: ExpressResponse) {
         const form = await Form.findByPk(id, {
             include: [
                 {
-                    model: Question,
-                    as: 'questions',
-                    include: [
-                        {
-                            model: Option,
-                            as: 'options'
-                        }
-                    ]
+                    association: 'questions',
+                    include: [{ association: 'options' }]
                 }
             ]
         });
+
         console.log("update form : ", JSON.stringify(form));
         if (!form) {
             return res.status(404).json({ message: 'Form not found' });
@@ -128,37 +128,36 @@ export async function updateForm(req: Request, res: ExpressResponse) {
         await form.update({ title, description });
 
         const bodyQuestionIds = questions.filter((q: Question) => q.id > 0).map((q: Question) => q.id);
-        const questionsInDB = await form.getQuestions();
-        console.log("update questions : ", JSON.stringify(questions));
+        const DBQuestions = form.dataValues.questions;
+console.log("update questions : ", DBQuestions);
         // Delete questions
-        for (const dbQuestion of questionsInDB) {
+        if (DBQuestions) {
+        for (const dbQuestion of DBQuestions) {
 
-            const question = dbQuestion as Question;
+            if (!bodyQuestionIds.includes(dbQuestion.id)) {
 
-            if (!bodyQuestionIds.includes(question.id)) {
-
-                if (Array.isArray(question.options)) {
+                if (Array.isArray(dbQuestion.options)) {
                     
-                    await Promise.all(question.options.map(option => (option as Option).destroy()));
+                    await Promise.all(dbQuestion.options.map((op: Option) => op.destroy()));
                 }
-                await question.destroy();
+                await dbQuestion.destroy();
             }
+        }
         }
 
         for (const bodyQuestion of questions) {
-            let dbQuestion = questionsInDB.find((q) => q.id === bodyQuestion.id);
+            let dbQuestion = DBQuestions?.find((q) => q.id === bodyQuestion.id);
             
             if (dbQuestion) {
                 // Update question
-                const question = dbQuestion as Question;
-                await question.update({
+                await dbQuestion.update({
                     title: bodyQuestion.title,
                     selector: bodyQuestion.selector,
                     required: bodyQuestion.required
                 });
 
                 const bodyOptionIds = bodyQuestion.options.filter((o: Option) => o.id > 0).map((o: Option) => o.id);
-                const optionsInDB = await question.getOptions();
+                const optionsInDB = dbQuestion.options;
                 
                 // Delete options
                 if (optionsInDB) {
@@ -172,7 +171,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
                 // Update or create options
                 for (const bodyOption of bodyQuestion.options) {
                     if (bodyOption.id > 0) {
-                        const dbOption = dbQuestion.options?.find((o) => o.id === bodyOption.id);
+                        const dbOption = dbQuestion.options?.find((op: Option) => op.id === bodyOption.id);
                         if (dbOption) {
                             await dbOption.update({
                                 title: bodyOption.title,
@@ -180,25 +179,28 @@ export async function updateForm(req: Request, res: ExpressResponse) {
                             });
                         }
                     } else {
-                        await dbQuestion.createOption?.({
+                        await Option.create({
                             title: bodyOption.title,
-                            checked: bodyOption.checked
+                            checked: bodyOption.checked,
+                            question_id: dbQuestion.id
                         });
                     }
                 }
             } else {
                 // Create new question
-                const createdQuestion = await form.createQuestion({
+                const createdQuestion = await Question.create({
                     title: bodyQuestion.title,
                     selector: bodyQuestion.selector,
-                    required: bodyQuestion.required
+                    required: bodyQuestion.required,
+                    form_id: form.dataValues.id as number
                 });
 
                 // Create options for the new question
                 for (const option of bodyQuestion.options) {
-                    await createdQuestion.createOption?.({
+                    await Option.create({
                         title: option.title,
-                        checked: option.checked
+                        checked: option.checked,
+                        question_id: createdQuestion.dataValues.id as number
                     });
                 }
             }

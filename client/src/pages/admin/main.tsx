@@ -8,13 +8,11 @@ function MainPage() {
 
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
-  const [selectedForm, setSelectedForm] = useState<Form>({id: -Date.now(), title: '', description: '', questions: []});
+  const [selectedForm, setSelectedForm] = useState<Form>({id: -Date.now(),title: '', description: '', questions: []});
 
   async function addForm(form: Form) {
 
-    const formToSend = { ...form, id: form.id > 0 ? form.id : -Date.now() };
-
-    await fetchCreateForm(formToSend);
+    await fetchCreateForm(form);
     setForms(await fetchGetForms());
   }
 
@@ -22,7 +20,7 @@ function MainPage() {
     
     await fetchDeleteForm(id);
     setForms(await fetchGetForms());
-    if (selectedForm.id === id)
+    if (selectedForm.id === id || forms.length === 0)
         setSelectedForm({id: -Date.now(), title: '', description: '', questions: []});
   }
 
