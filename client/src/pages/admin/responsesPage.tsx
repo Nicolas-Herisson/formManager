@@ -13,13 +13,12 @@ export default function ResponsesPage({ selectedForm }: IResponsesPageProps) {
             try {
                 
                 const res: Array<{ id: number; form_id: number; response: string }> = await fetchGetResponses(selectedForm.id);
-                console.log("res", res);
+
                 const parsed: ParsedResponse[] = res.map((r) => ({
                     ...r,
                     parsed: r.response ? JSON.parse(r.response) : {},
                 }));
-                console.log("preparsed");
-                console.log("parsed", parsed);
+
                 setResponses(parsed);
             } catch {
                 setResponses([]);

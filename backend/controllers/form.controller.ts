@@ -60,15 +60,16 @@ export async function getForms(req: Request, res: ExpressResponse) {
             include: [
                 {
                     association: 'questions',
+                    order: [["id", "ASC"]],
                     include: [
                         {
-                            association: 'options'
+                            association: 'options',
+                            order: [["id", "ASC"]]
                         }
                     ]
                 }
             ]
         });
-        console.log(JSON.stringify(forms));
 
         res.status(200).json(forms);
     } catch (error: any) {
@@ -85,9 +86,11 @@ export async function getForm(req: Request, res: ExpressResponse) {
             include: [
                 {
                     association: 'questions',
+                    order: [["id", "ASC"]],
                     include: [
                         {
-                            association: 'options'
+                            association: 'options',
+                            order: [["id", "ASC"]]
                         }
                     ]
                 }
@@ -106,7 +109,6 @@ export async function getForm(req: Request, res: ExpressResponse) {
 }
 
 export async function updateForm(req: Request, res: ExpressResponse) {
-    console.log("in update");
     try {
         const { id } = req.params;
         const { title, description, questions } = req.body;
@@ -120,7 +122,6 @@ export async function updateForm(req: Request, res: ExpressResponse) {
             ]
         });
 
-        console.log("update form : ", JSON.stringify(form));
         if (!form) {
             return res.status(404).json({ message: 'Form not found' });
         }
@@ -129,7 +130,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
 
         const bodyQuestionIds = questions.filter((q: Question) => q.id > 0).map((q: Question) => q.id);
         const DBQuestions = form.dataValues.questions;
-console.log("update questions : ", DBQuestions);
+
         // Delete questions
         if (DBQuestions) {
         for (const dbQuestion of DBQuestions) {
