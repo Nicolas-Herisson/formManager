@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Question from "./form/question";
 import type { Question as QuestionType } from "../../types/types";
-import { fetchGetForm } from "../../services/formRequests";
 import type { Form } from "@/types/types";
 import { Plus, Save } from "lucide-react";
 import { toast } from "sonner";
@@ -56,25 +55,29 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
             return;
         }
 
-        const oldForm = await fetchGetForm(form.id);
         const loadingToast = toast.loading('Enregistrement en cours...');
 
-        try {
-            if (oldForm) {
-
-                await updateForm(newForm);
-                toast.success('Formulaire mis à jour avec succès', { id: loadingToast });
-
-            } else {
-
-                await addForm(newForm);
-                toast.success('Formulaire créé avec succès', { id: loadingToast });
+        if (form.id > 0)
+            {
+                try {
+                    await updateForm(newForm);
+                    toast.success('Formulaire mis à jour avec succès', { id: loadingToast });
+                } catch (error) {
+                    toast.error('Erreur lors de la mise à jour du formulaire', { id: loadingToast });
+                    console.error(error);
+                }
+            } 
+        else
+            {
+                try {
+                    await addForm(newForm);
+                    toast.success('Formulaire créé avec succès', { id: loadingToast });
+                } catch (error) {
+                    toast.error('Erreur lors de la création du formulaire', { id: loadingToast });
+                    console.error(error);
+                }
             }
-        } catch (error) {
-            
-            toast.error('Erreur lors de l\'enregistrement', { id: loadingToast });
-            console.error(error);
-        }
+
     }
 
     return (

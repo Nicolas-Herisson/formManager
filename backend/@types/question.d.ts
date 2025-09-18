@@ -3,6 +3,7 @@ export interface IQuestion {
     title: string;
     selector: string;
     required: boolean;
+    options?: IOption[];
     form_id: number;
 }
 

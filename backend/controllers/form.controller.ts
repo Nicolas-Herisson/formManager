@@ -43,6 +43,10 @@ export async function createForm(req: Request, res: ExpressResponse) {
                     association: 'questions',
                     include: [{ association: 'options' }]
                 }
+            ],
+            order: [
+                [{ model: Question, as: 'questions' }, 'id', 'ASC'],
+                [{ model: Question, as: 'questions' }, { model: Option, as: 'options' }, 'id', 'ASC'],
             ]
         });
 
@@ -60,14 +64,16 @@ export async function getForms(req: Request, res: ExpressResponse) {
             include: [
                 {
                     association: 'questions',
-                    order: [["id", "ASC"]],
                     include: [
                         {
                             association: 'options',
-                            order: [["id", "ASC"]]
                         }
                     ]
                 }
+            ],
+            order: [
+                [{ model: Question, as: 'questions' }, 'id', 'ASC'],
+                [{ model: Question, as: 'questions' }, { model: Option, as: 'options' }, 'id', 'ASC']
             ]
         });
 
@@ -86,14 +92,16 @@ export async function getForm(req: Request, res: ExpressResponse) {
             include: [
                 {
                     association: 'questions',
-                    order: [["id", "ASC"]],
                     include: [
                         {
                             association: 'options',
-                            order: [["id", "ASC"]]
                         }
                     ]
                 }
+            ],
+            order: [
+                [{ model: Question, as: 'questions' }, 'id', 'ASC'],
+                [{ model: Question, as: 'questions' }, { model: Option, as: 'options' }, 'id', 'ASC']
             ]
         });
         
@@ -119,6 +127,10 @@ export async function updateForm(req: Request, res: ExpressResponse) {
                     association: 'questions',
                     include: [{ association: 'options' }]
                 }
+            ],
+            order: [
+                [{ model: Question, as: 'questions' }, 'id', 'ASC'],
+                [{ model: Question, as: 'questions' }, { model: Option, as: 'options' }, 'id', 'ASC']
             ]
         });
 
@@ -128,95 +140,119 @@ export async function updateForm(req: Request, res: ExpressResponse) {
         
         await form.update({ title, description });
 
-        const bodyQuestionIds = questions.filter((q: Question) => q.id > 0).map((q: Question) => q.id);
-        const DBQuestions = form.dataValues.questions;
+        const questionsInDB = form.dataValues.questions;
 
+        if (!questionsInDB) {
+            return res.status(404).json({ message: 'Questions not found' });
+        }
+
+        const optionsInDB = questionsInDB.map((q: Question) => q.dataValues.options);
+        // extract sub array to create one array
+        const flatOptionsInDB = optionsInDB.flat();
+
+        if (!flatOptionsInDB) {
+            return res.status(404).json({ message: 'Options not found' });
+        }
+
+
+        const questionsToDelete = questionsInDB.filter((q: Question) => !questions.find((q2: Question) => q2.id === q.dataValues.id));
+        const questionsToCreate = questions.filter((q: Question) => !questionsInDB.find((q2: Question) => q2.dataValues.id === q.id));
+        const questionsToUpdate = questions.filter((q: Question) => questionsInDB.find((q2: Question) => q2.dataValues.id === q.id));
+        
         // Delete questions
-        if (DBQuestions) {
-        for (const dbQuestion of DBQuestions) {
+        for (const question of questionsToDelete) {
+            await question.destroy();
+        }
 
-            if (!bodyQuestionIds.includes(dbQuestion.id)) {
+        // Create questions
+        for (const question of questionsToCreate) {
+            const createdQuestion = await Question.create({
+                title: question.title,
+                selector: question.selector,
+                required: question.required,
+                form_id: form.dataValues.id,
+            });
 
-                if (Array.isArray(dbQuestion.options)) {
-                    
-                    await Promise.all(dbQuestion.options.map((op: Option) => op.destroy()));
-                }
-                await dbQuestion.destroy();
+            // Create options
+            for (const option of question.options) {
+                await Option.create({
+                    title: option.title,
+                    checked: option.checked,
+                    question_id: createdQuestion.dataValues.id,
+                });
             }
         }
-        }
 
-        for (const bodyQuestion of questions) {
-            let dbQuestion = DBQuestions?.find((q) => q.id === bodyQuestion.id);
-            
-            if (dbQuestion) {
-                // Update question
-                await dbQuestion.update({
-                    title: bodyQuestion.title,
-                    selector: bodyQuestion.selector,
-                    required: bodyQuestion.required
-                });
-
-                const bodyOptionIds = bodyQuestion.options.filter((o: Option) => o.id > 0).map((o: Option) => o.id);
-                const optionsInDB = dbQuestion.options;
-                
-                // Delete options
-                if (optionsInDB) {
-                    for (const dbOption of optionsInDB) {
-                        if (!bodyOptionIds.includes(dbOption.id)) {
-                            await dbOption.destroy();
-                        }
-                    }
+        // Update questions
+        for (const question of questionsToUpdate) {
+            await Question.update({
+                title: question.title,
+                selector: question.selector,
+                required: question.required,
+            }, {
+                where: {
+                    id: question.id
                 }
+            });
 
-                // Update or create options
-                for (const bodyOption of bodyQuestion.options) {
-                    if (bodyOption.id > 0) {
-                        const dbOption = dbQuestion.options?.find((op: Option) => op.id === bodyOption.id);
-                        if (dbOption) {
-                            await dbOption.update({
-                                title: bodyOption.title,
-                                checked: bodyOption.checked
-                            });
+            const dbOptionsForCurrentQuestion = flatOptionsInDB
+            .filter((opt: Option) => opt.dataValues.question_id === question.id);
+
+            const payloadOptionsIds = new Set(
+                (question.options ?? [])
+                  .map((opt: any) => opt.id)
+              );
+
+            const optionsToDelete = dbOptionsForCurrentQuestion
+            .filter((opt: Option) => !payloadOptionsIds.has(opt.dataValues.id));
+
+            // Delete options
+            for (const option of optionsToDelete) {
+                await option.destroy();
+            }
+
+            for (const option of question.options) {
+                // Update options
+                if (flatOptionsInDB
+                    .find((opt: Option) => opt.dataValues.id === option.id && 
+                    opt.dataValues.question_id === question.id)) {
+
+                    await Option.update({
+                        title: option.title,
+                        checked: option.checked,
+                    }, {
+                        where: {
+                            id: option.id
                         }
-                    } else {
-                        await Option.create({
-                            title: bodyOption.title,
-                            checked: bodyOption.checked,
-                            question_id: dbQuestion.id
-                        });
-                    }
+                    });
                 }
-            } else {
-                // Create new question
-                const createdQuestion = await Question.create({
-                    title: bodyQuestion.title,
-                    selector: bodyQuestion.selector,
-                    required: bodyQuestion.required,
-                    form_id: form.dataValues.id as number
-                });
-
-                // Create options for the new question
-                for (const option of bodyQuestion.options) {
+                // Create options
+                else {
                     await Option.create({
                         title: option.title,
                         checked: option.checked,
-                        question_id: createdQuestion.dataValues.id as number
+                        question_id: question.id,
                     });
                 }
             }
         }
 
-        const updatedForm = await Form.findByPk(form.id, {
+        const formUpdated = await Form.findByPk(id, {
             include: [
                 {
                     association: 'questions',
-                    include: ['options']
+                    include: [{ association: 'options' }]
                 }
+            ],
+            order: [
+                [{ model: Question, as: 'questions' }, 'id', 'ASC'],
+                [{ model: Question, as: 'questions' }, { model: Option, as: 'options' }, 'id', 'ASC']
             ]
         });
 
-        res.json(updatedForm);
+
+        res.status(200).json(formUpdated);
+
     } catch (error: any) {
         console.error('Error updating form:', error);
         res.status(500).json({ error: error.message });
