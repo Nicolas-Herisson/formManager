@@ -8,7 +8,7 @@ function MainPage() {
 
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
-  const [selectedForm, setSelectedForm] = useState<Form>({id: -Date.now(),title: '', description: '', questions: []});
+  const [selectedForm, setSelectedForm] = useState<Form>({id: -Date.now(),title: '', description: '', is_published: false, questions: []});
 
   async function addForm(form: Form) {
 
@@ -21,7 +21,7 @@ function MainPage() {
     await fetchDeleteForm(id);
     setForms(await fetchGetForms());
     if (selectedForm.id === id || forms.length === 0)
-        setSelectedForm({id: -Date.now(), title: '', description: '', questions: []});
+        setSelectedForm({id: -Date.now(), title: '', description: '', is_published: false, questions: []});
   }
 
   async function updateForm(form: Form) {
@@ -40,14 +40,13 @@ function MainPage() {
     
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchForms();
-}, []);
+}, [fetchForms]);
 
   return (
     <div className="flex">
-       <LeftPanel setShowRightPanel={setShowRightPanel} forms={forms} setSelectedForm={setSelectedForm} deleteForm={deleteForm}/>
+       <LeftPanel setShowRightPanel={setShowRightPanel} forms={forms} setSelectedForm={setSelectedForm} deleteForm={deleteForm} refetchForms={fetchForms}/>
       {showRightPanel && <RightPanel form={selectedForm} setForm={setSelectedForm} updateForm={updateForm} addForm={addForm} selectedForm={selectedForm} />}
     </div>
   )

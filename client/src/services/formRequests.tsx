@@ -53,3 +53,14 @@ export async function fetchUpdateForm(form: Form) {
         return null;
     }
 }
+
+export async function fetchPublishForm(id: number) {
+    try {
+        const {data} = await httpRequester.put(`/forms/${id}/publish`);
+
+        return data;
+    } catch (error) {
+        console.error('Error publishing form:', error);
+        return null;
+    }
+}

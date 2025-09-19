@@ -44,8 +44,8 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
 
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const newForm = { id: form.id, title, description, questions: form.questions };
-        
+        const newForm = { id: form.id, title, description, is_published: form.is_published, questions: form.questions };
+
         if (!title.trim()) {
             toast.error('Le titre est obligatoire');
             return;
@@ -167,15 +167,7 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
                     </div>
 
                     {/* buttons */}
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                        <Button 
-                            type="button"
-                            onClick={addQuestion}
-                            className="flex items-center gap-2 px-4 py-2"
-                        >
-                            <Plus size={16} />
-                            Ajouter une question
-                        </Button>
+                    <div className="flex justify-end pt-4 border-t border-gray-200">
                         <Button 
                             type="submit" 
                             className="flex items-center gap-2 px-4 py-2"

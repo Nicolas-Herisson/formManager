@@ -9,5 +9,6 @@ formRouter.post('/forms', sanitizer, formController.createForm);
 formRouter.get('/forms/:id', formController.getForm);
 formRouter.put('/forms/:id', sanitizer, formController.updateForm);
 formRouter.delete('/forms/:id', formController.deleteForm);
+formRouter.put('/forms/:id/publish', formController.publishForm);
 
 export default formRouter;

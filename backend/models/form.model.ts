@@ -8,7 +8,7 @@ export default class Form extends Model<IForm, ICreateForm> implements IForm {
     public title!: string;
     public description!: string;
     public questions!: Question[];
-
+    public is_published!: boolean;
 };
 
 Form.init({
@@ -23,6 +23,11 @@ Form.init({
     },
     description: {
         type: DataTypes.TEXT
+    },
+    is_published: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize,

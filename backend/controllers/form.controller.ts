@@ -6,7 +6,7 @@ import Option from "../models/option";
 export async function createForm(req: Request, res: ExpressResponse) {
     try {
         const { title, description, questions } = req.body;
-        const newForm = await Form.create({ title, description });
+        const newForm = await Form.create({ title, description, is_published: false });
 
         const createdQuestions = await Promise.all(
 
@@ -119,7 +119,7 @@ export async function getForm(req: Request, res: ExpressResponse) {
 export async function updateForm(req: Request, res: ExpressResponse) {
     try {
         const { id } = req.params;
-        const { title, description, questions } = req.body;
+        const { title, description, is_published, questions } = req.body;
 
         const form = await Form.findByPk(id, {
             include: [
@@ -138,7 +138,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
             return res.status(404).json({ message: 'Form not found' });
         }
         
-        await form.update({ title, description });
+        await form.update({ title, description, is_published });
 
         const questionsInDB = form.dataValues.questions;
 
@@ -273,6 +273,25 @@ export async function deleteForm(req: Request, res: ExpressResponse) {
         res.status(200).json({ message: 'Form deleted successfully' });
     } catch (error: any) {
         console.error('Error deleting form:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function publishForm(req: Request, res: ExpressResponse) {
+    try {
+        const { id } = req.params;
+
+        const form = await Form.findByPk(id);
+
+        if (!form) {
+            return res.status(404).json({ message: 'Form not found' });
+        }
+
+        await form.update({ is_published: !form.dataValues.is_published });
+
+        res.status(200).json({ message: form.dataValues.is_published ? 'Form published' : 'Form unpublished' });
+    } catch (error: any) {
+        console.error('Error publishing form:', error);
         res.status(500).json({ error: error.message });
     }
 }

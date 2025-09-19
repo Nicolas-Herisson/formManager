@@ -12,7 +12,7 @@
 	},
 	"type": "module",
 	"scripts": {
-		"db:create": "node migrations/createTables.js",
+		"db:create": "tsx migrations/createTables.ts",
 		"dev": "tsx watch index.ts",
 		"build": "tsx"
 	},
