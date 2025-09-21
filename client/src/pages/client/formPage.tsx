@@ -4,16 +4,17 @@ import { fetchGetForm } from "@/services/formRequests";
 import {fetchCreateResponse} from "@/services/responseRequests";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function FormPage() {
 
     const [form, setForm] = useState<Form | null>(null);
     const [answers, setAnswers] = useState<AnswerMap>({});
     const formId = useParams<{ id: string }>().id;
-    const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
 
     useEffect(() => {
+        setSuccess(false);
         const fetchForm = async () => {
 
             const castFormId = Number(formId);
@@ -53,8 +54,6 @@ export function FormPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
-        setSuccess(false);
 
         if (form) {
             for (const q of form.questions) {
@@ -66,15 +65,27 @@ export function FormPage() {
                         (q.selector === "radio" && (val === null || val === undefined || val === "")) ||
                         (q.selector === "checkbox" && (!Array.isArray(val) || val.length === 0))
                     ) {
-                        setError("Merci de répondre à toutes les questions obligatoires.");
+                        toast.error("Merci de répondre à toutes les questions obligatoires.");
                         return;
                     }
                 }
             }
 
-            await fetchCreateResponse({ form_id: form.id, response: answers });
-        }
+           try {
 
+           await fetchCreateResponse({ form_id: form.id, response: answers });
+
+           } catch (error: any) {
+
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Une erreur est survenue lors de la création de la réponse.");
+            }
+            return;
+           }
+        }
+        toast.success("Réponses envoyées !");
         setSuccess(true);
         setAnswers({});
     };
@@ -88,62 +99,65 @@ export function FormPage() {
                         <h2 className="text-2xl font-bold text-center mb-2">{form.title}</h2>
                         <p className="text-gray-600 text-center mb-4">{form.description}</p>
                         
-                        {error && <div className="text-red-600 text-center mb-2">{error}</div>}
-                        {success && <div className="text-green-600 text-center mb-2">Réponses envoyées !</div>}
-                        
-                        {form.questions.map((question) => (
-                            <div key={question.id} className="mb-2">
-                                <label className="block font-semibold mb-1">
-                                    {question.title}
-                                    {question.required && <span className="text-red-500 ml-1">*</span>}
-                                </label>
-                                {question.selector === "text" && (
-                                    <input
-                                        type="text"
-                                        className="border rounded px-2 py-1 w-full"
-                                        value={answers[question.id]?.toString() || ''}
-                                        onChange={e => handleChange(question, e.target.value)}
-                                        required={question.required}
-                                    />
-                                )}
-                                {question.selector === "radio" && (
-                                    <div className="flex flex-col gap-1">
-                                        {question.options.map(option => (
-                                            <label key={option.id} className="inline-flex items-center gap-2">
-                                                <input
-                                                    type="radio"
-                                                    name={`q_${question.id}`}
-                                                    value={option.id}
-                                                    checked={answers[question.id] === option.id}
-                                                    onChange={() => handleOptionChange(question, option.id, true)}
-                                                    required={question.required}
-                                                />
-                                                {option.title}
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
-                                {question.selector === "checkbox" && (
-                                    <div className="flex flex-col gap-1">
-                                        {question.options.map(option => (
-                                            <label key={option.id} className="inline-flex items-center gap-2">
-                                                <input
-                                                    type="checkbox"
-                                                    name={`q_${question.id}_opt_${option.id}`}
-                                                    value={option.id}
-                                                    checked={Array.isArray(answers[question.id]) && (answers[question.id] as number[]).includes(option.id)}
-                                                    onChange={e => handleOptionChange(question, option.id, e.target.checked)}
-                                                />
-                                                {option.title}
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                        {success ? (
+                            <div className="text-green-600 text-center mb-2">Réponses envoyées !</div>
+                        ) : (
+                            <>
+                                {form.questions.map((question) => (
+                                <div key={question.id} className="mb-2">
+                                    <label className="block font-semibold mb-1">
+                                        {question.title}
+                                        {question.required && <span className="text-red-500 ml-1">*</span>}
+                                    </label>
+                                    {question.selector === "text" && (
+                                        <input
+                                            type="text"
+                                            className="border rounded px-2 py-1 w-full"
+                                            value={answers[question.id]?.toString() || ''}
+                                            onChange={e => handleChange(question, e.target.value)}
+                                            required={question.required}
+                                        />
+                                    )}
+                                    {question.selector === "radio" && (
+                                        <div className="flex flex-col gap-1">
+                                            {question.options.map(option => (
+                                                <label key={option.id} className="inline-flex items-center gap-2">
+                                                    <input
+                                                        type="radio"
+                                                        name={`q_${question.id}`}
+                                                        value={option.id}
+                                                        checked={answers[question.id] === option.id}
+                                                        onChange={() => handleOptionChange(question, option.id, true)}
+                                                        required={question.required}
+                                                    />
+                                                    {option.title}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {question.selector === "checkbox" && (
+                                        <div className="flex flex-col gap-1">
+                                            {question.options.map(option => (
+                                                <label key={option.id} className="inline-flex items-center gap-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name={`q_${question.id}_opt_${option.id}`}
+                                                        value={option.id}
+                                                        checked={Array.isArray(answers[question.id]) && (answers[question.id] as number[]).includes(option.id)}
+                                                        onChange={e => handleOptionChange(question, option.id, e.target.checked)}
+                                                    />
+                                                    {option.title}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                         ))}
                         <Button type="submit" className="w-full">
                             Envoyer
                         </Button>
+                        </>)}
+
                     </form>
                 ) : (
                     <p>Loading form...</p>
