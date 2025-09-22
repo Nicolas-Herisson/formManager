@@ -3,7 +3,7 @@ import { DataTypes, Model } from "sequelize";
 import type { IUser } from "../@types/user";
 
 export default class User extends Model implements IUser {
-    public id!: number;
+    public id!: string;
     public name!: string;
     public email!: string;
     public password!: string;
@@ -12,9 +12,9 @@ export default class User extends Model implements IUser {
 
 User.init({
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true
+        defaultValue: DataTypes.UUIDV4
     },
     name: {
         type: DataTypes.STRING,

@@ -14,8 +14,8 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/" element={<MainPage />} />
-        <Route path="/client/form/:id" element={<FormPage />} /> */}
+        <Route path="/" element={<MainPage />} />
+        <Route path="/client/form/:id" element={<FormPage />} />
       </Routes>
     </>
   );

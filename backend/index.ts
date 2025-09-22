@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import formRouter from "./routers/forms.router";
 import responseRouter from "./routers/response.router";
+import authRouter from "./routers/auth.router";
 import cors from "cors";
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.static('public'));
 
 app.use( '/api', formRouter );
 app.use( '/api', responseRouter );
+app.use( '/api', authRouter );
 
 app.listen(process.env.LISTEN_PORT || 3000, () => {
     console.log(`Server is running on http://${process.env.LISTEN_HOST}:${process.env.LISTEN_PORT}`);
