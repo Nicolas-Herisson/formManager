@@ -3,9 +3,33 @@ import User from "../models/user.model";
 import argon2 from "argon2";
 import { emailSchema } from "../schemas/email.schema";
 import { passwordSchema } from "../schemas/password.schema";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function login(req: Request, res: Response) {
+    const { email, password } = req.body;
 
+    const findUser = await User.findOne({where: {email}});
+
+    if(!findUser) {
+        return res.status(400).json({message: 'Email ou mot de passe incorrect'});
+    }
+
+    const passwordMatch = await argon2.verify(findUser.password, password);
+
+    if(!passwordMatch) {
+        return res.status(400).json({message: 'Email ou mot de passe incorrect'});
+    }
+
+    const accessToken = jwt.sign({id: findUser.id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({id: findUser.id}, process.env.JWT_SECRET!, { expiresIn: '1d' });
+    const csrfToken = uuidv4();
+
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 60 * 60 * 1000 });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+
+    return res.status(200).json({message: 'Vous avez été connecté avec succès', csrfToken});
 }
 
 export async function register(req: Request, res: Response) {
