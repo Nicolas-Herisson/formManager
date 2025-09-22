@@ -5,6 +5,7 @@ import {fetchCreateResponse} from "@/services/responseRequests";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import type { Error } from "../../types/types";
 
 export function FormPage() {
 
@@ -75,10 +76,10 @@ export function FormPage() {
 
            await fetchCreateResponse({ form_id: form.id, response: answers });
 
-           } catch (error: any) {
+           } catch (error) {
 
-            if (error.response && error.response.data && error.response.data.message) {
-                toast.error(error.response.data.message);
+            if (error instanceof Error) {
+                toast.error(error.message);
             } else {
                 toast.error("Une erreur est survenue lors de la création de la réponse.");
             }

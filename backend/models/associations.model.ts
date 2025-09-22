@@ -2,6 +2,7 @@ import Form from "./form.model";
 import Question from "./questions.model";
 import Response from "./response.model";
 import Option from "./option";
+import User from "./user.model";
 
 
 Form.hasMany(Question, {
@@ -46,10 +47,24 @@ Response.belongsTo(Question, {
     onUpdate: 'CASCADE' 
 });
 
+User.hasMany(Form, {
+    as: 'forms',
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+
+Form.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
 
 export {
     Form,
     Question,
     Response,
     Option,
+    User,
 };

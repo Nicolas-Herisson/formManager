@@ -1,5 +1,5 @@
 import sequelize from "../database/client";
-import { Form, Question, Response, Option } from "../models/associations.model";
+import "../models/associations.model";
 
 await sequelize.dropAllSchemas({});
 

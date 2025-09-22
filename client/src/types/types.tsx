@@ -43,3 +43,12 @@ export interface ParsedResponse {
     response: string;
     parsed: Record<string, string | number | number[]>;
 }
+
+export interface Error {
+    response: {
+        data: {
+            message: string;
+            code: number;
+        }
+    }
+}
