@@ -11,14 +11,12 @@ export default function Login() {
     
     const onSubmit = async (data: Login) => {
         const response = await fetchLogin(data);
-        console.log("response", response);
+
         if(response?.message === 'Vous avez été connecté avec succès') {
             toast.success('Connexion reussie');
             navigate('/');
         }
         else {
-            console.log("else");
-            console.log(response);
             toast.error(response);
         }
 

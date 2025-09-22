@@ -5,7 +5,6 @@ import {fetchCreateResponse} from "@/services/responseRequests";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import type { Error } from "../../types/types";
 
 export function FormPage() {
 

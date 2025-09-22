@@ -1,8 +1,5 @@
 export default function applyCSRF(pathname: string, method: string) {
     const upperMethod = method.toUpperCase();
-    console.log("pathname", pathname);
-
-    console.log(pathname, upperMethod);
 
     if(applyCSRFTokenOnFormRoutes(pathname, upperMethod)) 
         return true;
@@ -19,10 +16,8 @@ export default function applyCSRF(pathname: string, method: string) {
 function applyCSRFTokenOnFormRoutes(pathname: string, method: string) {
     const getForm = /^\/forms/;
 
-    if(getForm.test(pathname) && method === "GET") {
-        console.log("applyCSRFTokenOnFormRoutes");
+    if(getForm.test(pathname) && method === "GET") 
         return true;
-    }
 
     return false;
 }
@@ -31,13 +26,11 @@ function applyCSRFTokenOnResponseRoutes(pathname: string, method: string) {
     const responsesList = /^\/forms\/[^/]+\/responses$/; // exact list path
     const responsesSingle = /^\/forms\/[^/]+\/responses\/[^/]+$/; // item path
 
-    if(responsesList.test(pathname) && (method === "GET" || method === "DELETE")) {
+    if(responsesList.test(pathname) && (method === "GET" || method === "DELETE")) 
         return true;
-    }
 
-    if(responsesSingle.test(pathname) && (method === "GET" || method === "DELETE")) {
+    if(responsesSingle.test(pathname) && (method === "GET" || method === "DELETE")) 
         return true;
-    }
 
     return false;
 }
@@ -45,10 +38,8 @@ function applyCSRFTokenOnResponseRoutes(pathname: string, method: string) {
 function applyCsrfOnUserRoutes(pathname: string) {
     const user = /^\/users\//;
 
-    if(user.test(pathname)) {
-        console.log("applyCsrfOnUserRoutes");
+    if(user.test(pathname)) 
         return true;
-    }
 
     return false;
 }

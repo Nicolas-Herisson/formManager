@@ -11,13 +11,12 @@ const httpRequester = axios.create({
 
 httpRequester.interceptors.request.use(
     (config) => {
-        console.log("in interceptors");
-        console.log(document.cookie);
+        
         const csrfToken = document.cookie
         .split(";")
         .map((c) => c.trim())
         .find((cookie) => cookie.startsWith("csrfToken="))?.split("=")[1];
-        console.log("csrfToken", csrfToken);
+
         if (csrfToken && applyCSRF(config.url!, config.method!)) {
             config.headers['X-CSRF-Token'] = csrfToken;
         }

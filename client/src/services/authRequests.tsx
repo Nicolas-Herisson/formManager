@@ -5,14 +5,15 @@ import type { Login, Register } from "../types/types";
 export async function fetchLogin(user: Login) {
     try {
         const {data} = await httpRequester.post('/login', user);
-        console.log("after login");
+
         return data;
     } catch (error) {
-        if(isAxiosError(error)) {
-            console.log("axios error");
+
+        if(isAxiosError(error)) 
             return error.response?.data.message;
-        }
+
         console.error('Error logging in:', error);
+
         return null;
     }
 }
@@ -23,10 +24,12 @@ export async function fetchRegister(user: Register) {
 
         return data;
     } catch (error: unknown) {
-        if(isAxiosError(error)) {
+
+        if(isAxiosError(error)) 
             return error.response?.data.message;
-        }
+
         console.error('Error registering user:', error);
+
         return null;
     }
 }
