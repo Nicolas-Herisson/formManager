@@ -72,3 +72,7 @@ export async function register(req: Request, res: Response) {
 export function logout(req: Request, res: Response) {
     
 }
+
+export function refresh(req: Request, res: Response) {
+    
+}
