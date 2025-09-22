@@ -2,9 +2,13 @@ import { Plus, Copy, Trash2, CheckCircle2, XCircle, Power } from "lucide-react";
 import { toast } from "sonner";
 import type { Form } from "@/types/types";
 import { Button } from "@/components/ui/button";
+import { fetchLogout } from "@/services/authRequests";
 import { fetchPublishForm } from "@/services/formRequests";
+import { useNavigate } from "react-router";
 
 export default function LeftPanel({ setShowRightPanel, forms, setSelectedForm, deleteForm, refetchForms }: ILeftPanelProps) {
+
+    const navigate = useNavigate();
 
     const handleCopyLink = async (formId: number) => {
         try {
@@ -78,6 +82,11 @@ export default function LeftPanel({ setShowRightPanel, forms, setSelectedForm, d
             }
         }
     };
+
+    async function logout() {
+        await fetchLogout();
+        navigate('/login');
+    }
 
     return (
         <div className="w-80 h-screen flex flex-col border-r border-gray-200 bg-gray-50">
@@ -155,6 +164,7 @@ export default function LeftPanel({ setShowRightPanel, forms, setSelectedForm, d
                     ))
                 )}
             </div>
+            <Button className="sticky" onClick={logout}>Se deconnecter</Button>
         </div>
     );
 }

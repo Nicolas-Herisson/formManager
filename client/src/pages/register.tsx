@@ -13,21 +13,21 @@ export default function Register() {
 
         const response = await fetchRegister(data);
 
-        if(response.message === 'User created successfully') {
+        if(response === 'User created successfully') {
             toast.success('Inscription reussie');
             navigate('/login');
         }
         else {
-            if(Array.isArray(response.messages)) {
-                for(const message of response.messages) {
+            if(Array.isArray(response)) {
+                for(const message of response) {
                     toast.error(message);
                 }
             }
             else {
-                toast.error(response.message);
+                toast.error(response);
             }
         }
-        
+
     }
     
     return (
@@ -59,6 +59,8 @@ export default function Register() {
                 {errors.confirmPassword && errors.confirmPassword.type === 'maxLength' && <p className="text-red-500">Le mot de passe doit contenir au maximum 20 caracteres</p>}
 
                 <Button type="submit">Enregistrer</Button>
+
+                <p className="text-center">Vous avez déjà un compte ? <Button type="button" onClick={() => navigate('/login')}>Se connecter</Button></p>
             </form> 
         </div>
     );

@@ -8,21 +8,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function login(req: Request, res: Response) {
     const { email, password } = req.body;
-
     const findUser = await User.findOne({where: {email}});
 
     if(!findUser) {
         return res.status(400).json({message: 'Email ou mot de passe incorrect'});
     }
 
-    const passwordMatch = await argon2.verify(findUser.password, password);
+    const passwordMatch = await argon2.verify(findUser.dataValues.password, password);
 
     if(!passwordMatch) {
         return res.status(400).json({message: 'Email ou mot de passe incorrect'});
     }
 
-    const accessToken = jwt.sign({id: findUser.id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({id: findUser.id}, process.env.JWT_SECRET!, { expiresIn: '1d' });
+    const accessToken = jwt.sign({id: findUser.dataValues.id}, process.env.SALT!, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({id: findUser.dataValues.id}, process.env.SALT!, { expiresIn: '1d' });
     const csrfToken = uuidv4();
 
     res.cookie('accessToken', accessToken, 
@@ -38,13 +37,13 @@ export async function login(req: Request, res: Response) {
             maxAge: 24 * 60 * 60 * 1000 
         });
     res.cookie('csrfToken', csrfToken, 
-        { httpOnly: true, 
+        { httpOnly: false, 
             secure: false, 
             sameSite: 'lax', 
             maxAge: 24 * 60 * 60 * 1000 
         });
 
-    return res.status(200).json({message: 'Vous avez été connecté avec succès', csrfToken});
+    return res.status(200).json({message: 'Vous avez été connecté avec succès'});
 }
 
 export async function register(req: Request, res: Response) {
@@ -85,7 +84,10 @@ export async function register(req: Request, res: Response) {
 }
 
 export function logout(req: Request, res: Response) {
-    
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.clearCookie('csrfToken');
+    return res.status(200).json({message: 'Vous avez été déconnecté avec succès'});
 }
 
 export function refresh(req: Request, res: Response) {

@@ -4,24 +4,24 @@ import { Button } from "@/components/ui/button";
 import type { Login } from "../types/types";
 import { toast } from "sonner";
 import { fetchLogin } from "../services/authRequests";
-import { fetchGetMe } from "../services/userRequests";
-import type { User } from "../types/types";
 
-export default function Login({setUser}: {setUser: (user: User) => void}) {
+export default function Login() {
     const navigate = useNavigate();
     const { register, handleSubmit} = useForm<Login>();
     
     const onSubmit = async (data: Login) => {
         const response = await fetchLogin(data);
-
-        if(response.message === 'User logged in successfully') {
-            const user = await fetchGetMe();
-            setUser(user);
+        console.log("response", response);
+        if(response?.message === 'Vous avez été connecté avec succès') {
+            toast.success('Connexion reussie');
             navigate('/');
         }
         else {
-            toast.error(response.message);
+            console.log("else");
+            console.log(response);
+            toast.error(response);
         }
+
     }
     
     return (
@@ -37,6 +37,7 @@ export default function Login({setUser}: {setUser: (user: User) => void}) {
                 <input type="password" id="password" placeholder="Password" className="border border-gray-200 rounded p-2" {...register('password', { required: true, minLength: 8, maxLength: 20, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/ })} />
 
                 <Button>Connexion</Button>
+                <p className="text-center">Vous n'avez pas de compte ? <Button type="button" onClick={() => navigate('/register')}>S'inscrire</Button></p>
             </form>
         </div>
     );

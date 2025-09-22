@@ -11,8 +11,13 @@ const httpRequester = axios.create({
 
 httpRequester.interceptors.request.use(
     (config) => {
-        const csrfToken = document.cookie.split(';').find((cookie) => cookie.startsWith('csrfToken='))?.split('=')[1];
-        
+        console.log("in interceptors");
+        console.log(document.cookie);
+        const csrfToken = document.cookie
+        .split(";")
+        .map((c) => c.trim())
+        .find((cookie) => cookie.startsWith("csrfToken="))?.split("=")[1];
+        console.log("csrfToken", csrfToken);
         if (csrfToken && applyCSRF(config.url!, config.method!)) {
             config.headers['X-CSRF-Token'] = csrfToken;
         }
@@ -28,14 +33,14 @@ httpRequester.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response.status === 401 && 
+        if (error.response && error.response.status === 401 && 
             !originalRequest._retry && 
-            originalRequest.url?.includes('/auth/refresh')) {
+            !originalRequest.url?.includes('/refresh')) {
 
             originalRequest._retry = true;
 
             try {
-                await httpRequester.post('/auth/refresh', {}, {withCredentials: true});
+                await httpRequester.post('/refresh', {}, {withCredentials: true});
                 return httpRequester(originalRequest);
             } catch (error) {
                 console.log(error);

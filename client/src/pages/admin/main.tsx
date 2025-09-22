@@ -3,11 +3,10 @@ import RightPanel from "./rightPanel/rightPanel"
 import type { Form } from "@/types/types";
 import { useState, useEffect, useCallback } from "react";
 import { fetchGetForms, fetchCreateForm, fetchDeleteForm, fetchUpdateForm } from "@/services/formRequests";
-import type { User } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 
-function MainPage({user}: {user: User | null}) {
+function MainPage({user}: {user: string | null}) {
 
   const navigate = useNavigate();
   const [showRightPanel, setShowRightPanel] = useState(false);
@@ -57,10 +56,13 @@ function MainPage({user}: {user: User | null}) {
        </>
       )}
       {!user && 
-      <div className="flex flex-col gap-4 justify-center w-full items-center h-screen">
-      <div className="flex justify-center items-center font-bold text-2xl">Vous devez être connecté pour accéder à cette page</div>
-      <Button onClick={() => navigate('/login')}>Se connecter</Button>
-      </div>
+        <div className="flex flex-col gap-4 justify-center w-full items-center h-screen">
+          <p className="flex justify-center items-center font-bold text-2xl">Vous devez être connecté pour accéder à cette page</p>
+          <div className="flex gap-4">
+            <Button onClick={() => navigate('/login')}>Se connecter</Button>
+            <Button onClick={() => navigate('/register')}>S'inscrire</Button>
+          </div>
+        </div>
       }
     </div>
   )
