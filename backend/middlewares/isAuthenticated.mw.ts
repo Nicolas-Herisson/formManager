@@ -21,3 +21,27 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
         return res.status(401).json({message: 'Unauthorized'});
     }
 }
+
+export const validateCSRF = (req: Request, res: Response, next: NextFunction) => {
+    const csrfToken = req.cookies.csrfToken;
+    const token = req.headers['x-csrf-token'];
+
+    if(!csrfToken || !token) {
+        return res.status(401).json({message: 'Unauthorized'});
+    }
+
+    if(csrfToken !== token) {
+        return res.status(401).json({message: 'Unauthorized'});
+    }
+
+    next();
+}
+
+export const authenticateAndCsrf = (req: Request, res: Response, next: NextFunction) => {
+    isAuthenticated(req, res, (error) => {
+        if(error) {
+            return next(error);
+        }
+        validateCSRF(req, res, next);
+    });
+}
