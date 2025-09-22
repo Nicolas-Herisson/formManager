@@ -74,5 +74,21 @@ export function logout(req: Request, res: Response) {
 }
 
 export function refresh(req: Request, res: Response) {
-    
+    const refreshToken = req.cookies.refreshToken;
+
+    if(!refreshToken) {
+        return res.status(401).json({message: 'Unauthorized'});
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET!);
+
+    if(typeof decoded === 'string') {
+        return res.status(401).json({message: 'Unauthorized'});
+    }
+
+    const accessToken = jwt.sign({id: decoded.id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
+
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 60 * 60 * 1000 });
+
+    return res.status(200).json({message: 'Token refreshed successfully'});
 }
