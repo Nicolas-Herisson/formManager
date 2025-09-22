@@ -1,0 +1,39 @@
+export default function applyCSRF(pathname: string, method: string) {
+    const upperMethod = method.toUpperCase();
+    const path = pathname.split("/api")[1];
+
+    console.log(path, upperMethod);
+
+    if(applyCSRFTokenOnFormRoutes(path, upperMethod)) 
+        return true;
+
+    if(applyCSRFTokenOnResponseRoutes(path, upperMethod)) 
+        return true;
+
+    return false;
+}
+
+function applyCSRFTokenOnFormRoutes(pathname: string, method: string) {
+    const getForm = /^\/forms\//;
+
+    if(!getForm.test(pathname) && method === "GET") {
+        return true;
+    }
+
+    return false;
+}
+
+function applyCSRFTokenOnResponseRoutes(pathname: string, method: string) {
+    const responsesList = /^\/forms\/[^/]+\/responses$/; // exact list path
+    const responsesSingle = /^\/forms\/[^/]+\/responses\/[^/]+$/; // item path
+
+    if(responsesList.test(pathname) && (method === "GET" || method === "DELETE")) {
+        return true;
+    }
+
+    if(responsesSingle.test(pathname) && (method === "GET" || method === "DELETE")) {
+        return true;
+    }
+
+    return false;
+}
