@@ -5,13 +5,14 @@ import { isAuthenticated } from "../middlewares/isAuthenticated.mw";
 
 const formRouter = Router();
 
-formRouter.use(isAuthenticated);
-
-formRouter.get('/forms', formController.getForms);
-formRouter.post('/forms', sanitizer, formController.createForm);
+//public
 formRouter.get('/forms/:id', formController.getForm);
-formRouter.put('/forms/:id', sanitizer, formController.updateForm);
-formRouter.delete('/forms/:id', formController.deleteForm);
-formRouter.put('/forms/:id/publish', formController.publishForm);
+
+//private
+formRouter.get('/forms', isAuthenticated, formController.getForms);
+formRouter.post('/forms', sanitizer, isAuthenticated, formController.createForm);
+formRouter.put('/forms/:id', sanitizer, isAuthenticated, formController.updateForm);
+formRouter.delete('/forms/:id', isAuthenticated, formController.deleteForm);
+formRouter.put('/forms/:id/publish', isAuthenticated, formController.publishForm);
 
 export default formRouter;

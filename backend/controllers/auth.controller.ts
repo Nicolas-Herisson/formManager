@@ -25,9 +25,24 @@ export async function login(req: Request, res: Response) {
     const refreshToken = jwt.sign({id: findUser.id}, process.env.JWT_SECRET!, { expiresIn: '1d' });
     const csrfToken = uuidv4();
 
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 60 * 60 * 1000 });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
-    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('accessToken', accessToken, 
+        { httpOnly: true, 
+            secure: false, 
+            sameSite: 'lax', 
+            maxAge: 60 * 60 * 1000 
+        });
+    res.cookie('refreshToken', refreshToken, 
+        { httpOnly: true, 
+            secure: false, 
+            sameSite: 'lax', 
+            maxAge: 24 * 60 * 60 * 1000 
+        });
+    res.cookie('csrfToken', csrfToken, 
+        { httpOnly: true, 
+            secure: false, 
+            sameSite: 'lax', 
+            maxAge: 24 * 60 * 60 * 1000 
+        });
 
     return res.status(200).json({message: 'Vous avez été connecté avec succès', csrfToken});
 }
@@ -88,7 +103,12 @@ export function refresh(req: Request, res: Response) {
 
     const accessToken = jwt.sign({id: decoded.id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
 
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 60 * 60 * 1000 });
+    res.cookie('accessToken', accessToken, 
+        { httpOnly: true, 
+            secure: false, 
+            sameSite: 'lax', 
+            maxAge: 60 * 60 * 1000 
+        });
 
     return res.status(200).json({message: 'Token refreshed successfully'});
 }
