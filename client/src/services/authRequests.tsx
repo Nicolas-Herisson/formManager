@@ -1,46 +1,42 @@
-import httpRequester from "./axios.config";
-import { isAxiosError } from "axios";
-import type { Login, Register } from "../types/types";
+import httpRequester from './axios.config';
+import { isAxiosError } from 'axios';
+import type { Login, Register } from '../types/types';
 
 export async function fetchLogin(user: Login) {
-    try {
-        const {data} = await httpRequester.post('/login', user);
+  try {
+    const { data } = await httpRequester.post('/login', user);
 
-        return data;
-    } catch (error) {
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.message;
 
-        if(isAxiosError(error)) 
-            return error.response?.data.message;
+    console.error('Error logging in:', error);
 
-        console.error('Error logging in:', error);
-
-        return null;
-    }
+    return null;
+  }
 }
 
 export async function fetchRegister(user: Register) {
-    try {
-        const {data} = await httpRequester.post('/register', user);
+  try {
+    const { data } = await httpRequester.post('/register', user);
 
-        return data;
-    } catch (error: unknown) {
+    return data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) return error.response?.data.message;
 
-        if(isAxiosError(error)) 
-            return error.response?.data.message;
+    console.error('Error registering user:', error);
 
-        console.error('Error registering user:', error);
-
-        return null;
-    }
+    return null;
+  }
 }
 
 export async function fetchLogout() {
-    try {
-        const {data} = await httpRequester.post('/logout');
+  try {
+    const { data } = await httpRequester.post('/logout');
 
-        return data;
-    } catch (error) {
-        console.error('Error logging out:', error);
-        return null;
-    }
+    return data;
+  } catch (error) {
+    console.error('Error logging out:', error);
+    return null;
+  }
 }

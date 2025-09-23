@@ -1,4 +1,22 @@
 {
     "plugins": ["prettier-plugin-tailwindcss"],
-    "tailwindPreserveWhitespace": true
+    "tailwindPreserveWhitespace": true,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "printWidth": 120,
+    "tabWidth": 2,
+    "semi": true,
+    "endOfLine": "auto",
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "singleAttributePerLine": true,
+    "overrides": [
+      {
+        "files": "*.{ts,tsx}",
+        "options": {
+          "parser": "typescript"
+        }
+      }
+    ]
 }

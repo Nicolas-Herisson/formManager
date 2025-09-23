@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import type { Question as QuestionType } from "../../../types/types";
 import type { Option } from "../../../types/types";
 import SelectorOption from "./selectorOption";
