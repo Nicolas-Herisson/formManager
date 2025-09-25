@@ -14,6 +14,7 @@
 	"type": "module",
 	"scripts": {
 		"db:create": "tsx migrations/createTables.ts",
+		"db:seed": "tsx migrations/seed.ts",
 		"dev": "tsx watch index.ts",
 		"build": "tsx"
 	},

@@ -7,12 +7,14 @@ Block access to form if not published -done
 
 Authentification
 -Account createdQuestion
--Token access + refresh
--CSRF Token
--user controller (/me)
--auth MW
--Login
--Logout
+-Token access + refresh - done
+-CSRF Token - done
+-user controller (/me) - done
+-auth MW - done
+-Login - done
+-Logout - done
+
+Add image on questions
 
 SECONDARY
 Refacto form controller
