@@ -125,13 +125,13 @@ export function refresh(req: Request, res: Response) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET!);
+  const decoded = jwt.verify(refreshToken, process.env.SALT!);
 
   if (typeof decoded === "string") {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const accessToken = jwt.sign({ id: decoded.id }, process.env.JWT_SECRET!, {
+  const accessToken = jwt.sign({ id: decoded.id }, process.env.SALT!, {
     expiresIn: "1h",
   });
 

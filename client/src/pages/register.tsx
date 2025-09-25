@@ -17,7 +17,7 @@ export default function Register() {
     data.role = 'user';
     const response = await fetchRegister(data);
 
-    if (response === 'User created successfully') {
+    if (response?.message === 'User created successfully') {
       toast.success('Inscription reussie');
       navigate('/login');
     } else {
