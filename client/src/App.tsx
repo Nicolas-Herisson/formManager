@@ -20,7 +20,12 @@ function App() {
 
   return (
     <>
-      <Toaster position="bottom-right" />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          className: 'cursor-pointer'
+        }}
+      />
       <Routes>
         <Route
           path="/login"

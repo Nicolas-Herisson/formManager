@@ -15,8 +15,8 @@ export default function Register() {
 
   const onSubmit = async (data: Register) => {
     const response = await fetchRegister(data);
-
-    if (response === 'User created successfully') {
+    console.log(response);
+    if (response?.message === 'User created successfully') {
       toast.success('Inscription reussie');
       navigate('/login');
     } else {
