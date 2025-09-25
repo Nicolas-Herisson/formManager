@@ -11,8 +11,7 @@ export default function LeftPanel({
   forms,
   setSelectedForm,
   deleteForm,
-  refetchForms,
-  selectedForm
+  refetchForms
 }: ILeftPanelProps) {
   const navigate = useNavigate();
 
@@ -211,5 +210,4 @@ interface ILeftPanelProps {
   setSelectedForm: (form: Form) => void;
   deleteForm: (id: number) => Promise<void>;
   refetchForms: () => Promise<void>;
-  selectedForm: Form;
 }

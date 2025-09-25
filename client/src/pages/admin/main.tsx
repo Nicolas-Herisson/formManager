@@ -53,7 +53,6 @@ function MainPage({ user }: { user: string | null }) {
             setShowRightPanel={setShowRightPanel}
             forms={forms}
             setSelectedForm={setSelectedForm}
-            selectedForm={selectedForm}
             deleteForm={deleteForm}
             refetchForms={fetchForms}
           />
