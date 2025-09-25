@@ -16,6 +16,12 @@ Authentification
 
 Add image on questions
 
+user role can't save or delete form
+setup 2/3 forms to let users test
+
+create admin dashboard :
+Allowing to invite user and give role
+
 SECONDARY
 Refacto form controller
 
