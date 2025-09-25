@@ -11,7 +11,8 @@ export default function LeftPanel({
   forms,
   setSelectedForm,
   deleteForm,
-  refetchForms
+  refetchForms,
+  selectedForm
 }: ILeftPanelProps) {
   const navigate = useNavigate();
 
@@ -31,7 +32,12 @@ export default function LeftPanel({
           padding: '0.75rem 1rem',
           fontWeight: 500
         },
-        icon: <CheckCircle2 className="text-green-600" size={18} />
+        icon: (
+          <CheckCircle2
+            className="text-green-600"
+            size={18}
+          />
+        )
       });
     } catch (error) {
       console.error('Erreur lors de la copie du lien:', error);
@@ -48,7 +54,12 @@ export default function LeftPanel({
           padding: '0.75rem 1rem',
           fontWeight: 500
         },
-        icon: <XCircle className="text-red-600" size={18} />
+        icon: (
+          <XCircle
+            className="text-red-600"
+            size={18}
+          />
+        )
       });
     }
   };
@@ -142,19 +153,20 @@ export default function LeftPanel({
                 </div>
 
                 <div className="mt-2 flex gap-2 self-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopyLink(form.id);
-                    }}
-                    className="text-blue-600 hover:bg-blue-50"
-                    title="Copier le lien"
-                  >
-                    <Copy size={16} />
-                  </Button>
-
+                  {form.is_published && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyLink(form.id);
+                      }}
+                      className="text-blue-600 hover:bg-blue-50"
+                      title="Copier le lien"
+                    >
+                      <Copy size={16} />
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"
@@ -183,7 +195,10 @@ export default function LeftPanel({
         )}
       </div>
 
-      <Button className="sticky" onClick={logout}>
+      <Button
+        className="sticky"
+        onClick={logout}
+      >
         Se deconnecter
       </Button>
     </div>
@@ -196,4 +211,5 @@ interface ILeftPanelProps {
   setSelectedForm: (form: Form) => void;
   deleteForm: (id: number) => Promise<void>;
   refetchForms: () => Promise<void>;
+  selectedForm: Form;
 }
