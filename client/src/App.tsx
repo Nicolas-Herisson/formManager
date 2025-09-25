@@ -6,14 +6,16 @@ import Login from './pages/login';
 import Register from './pages/register';
 import { useEffect, useState } from 'react';
 import { fetchGetMe } from './services/userRequests';
+import type { User } from './types/types';
 
 function App() {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userId = await fetchGetMe();
-      setUser(userId);
+      const user = await fetchGetMe();
+
+      setUser(user);
     };
     fetchUser();
   }, []);

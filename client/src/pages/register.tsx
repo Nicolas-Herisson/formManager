@@ -14,6 +14,7 @@ export default function Register() {
   } = useForm<Register>();
 
   const onSubmit = async (data: Register) => {
+    data.role = 'user';
     const response = await fetchRegister(data);
 
     if (response === 'User created successfully') {
