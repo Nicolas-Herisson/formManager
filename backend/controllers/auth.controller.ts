@@ -24,7 +24,7 @@ export async function login(req: Request, res: Response) {
   }
 
   const accessToken = jwt.sign(
-    { id: findUser.dataValues.id },
+    { id: findUser.dataValues.id, role_id: findUser.dataValues.role_id },
     process.env.SALT!,
     { expiresIn: "1h" }
   );
@@ -60,7 +60,9 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function register(req: Request, res: Response) {
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password, confirmPassword, role } = req.body;
+
+  const role_id = role === "admin" ? 1 : 2;
 
   if (password !== confirmPassword)
     return res
@@ -93,7 +95,12 @@ export async function register(req: Request, res: Response) {
 
     const hashPassword = await argon2.hash(password);
 
-    await User.create({ name, email, password: hashPassword });
+    await User.create({
+      name,
+      email,
+      password: hashPassword,
+      role_id: role_id,
+    });
 
     return res.status(201).json({ message: "User created successfully" });
   } catch (error) {

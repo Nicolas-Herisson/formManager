@@ -4,8 +4,9 @@ import type { Form } from '@/types/types';
 import { useState, useEffect, useCallback } from 'react';
 import { fetchGetForms, fetchCreateForm, fetchDeleteForm, fetchUpdateForm } from '@/services/formRequests';
 import { useNavigate } from 'react-router';
+import type { User } from '@/types/types';
 
-function MainPage({ user }: { user: string | null }) {
+function MainPage({ user }: { user: User | null }) {
   const navigate = useNavigate();
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
