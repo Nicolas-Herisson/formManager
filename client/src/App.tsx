@@ -42,7 +42,7 @@ function App() {
           element={<MainPage user={user} />}
         />
         <Route
-          path="/client/form/:id"
+          path="/client/form/:id/:token"
           element={<FormPage />}
         />
       </Routes>

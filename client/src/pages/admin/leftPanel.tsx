@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button/button';
 import { fetchLogout } from '@/services/authRequests';
 import { fetchPublishForm } from '@/services/formRequests';
 import { useNavigate } from 'react-router';
+import { fetchGetFormPagePath } from '@/services/formRequests';
 
 export default function LeftPanel({
   setShowRightPanel,
@@ -17,7 +18,8 @@ export default function LeftPanel({
 
   const handleCopyLink = async (formId: number) => {
     try {
-      await navigator.clipboard.writeText(`http://localhost:5173/client/form/${formId}`);
+      const { path } = await fetchGetFormPagePath(formId);
+      await navigator.clipboard.writeText(path);
 
       toast.success('Lien copié !', {
         description: 'Le lien a été copié dans le presse-papier',
@@ -78,26 +80,18 @@ export default function LeftPanel({
     }
   };
 
-  const handlePublishForm = async (formId: number, e: React.MouseEvent, published: boolean) => {
+  const handlePublishForm = async (formId: number, e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (
-      confirm(
-        published
-          ? 'Êtes-vous sûr de vouloir desactiver ce formulaire ?'
-          : 'Êtes-vous sûr de vouloir activer ce formulaire ?'
-      )
-    ) {
-      try {
-        const publishStatus = await fetchPublishForm(formId);
+    try {
+      const publishStatus = await fetchPublishForm(formId);
 
-        toast.success(publishStatus.message);
+      toast.success(publishStatus.message);
 
-        refetchForms();
-      } catch (error) {
-        console.error("Erreur lors de l'activation du formulaire:", error);
-        toast.error("Erreur lors de l'activation du formulaire");
-      }
+      refetchForms();
+    } catch (error) {
+      console.error("Erreur lors de l'activation du formulaire:", error);
+      toast.error("Erreur lors de l'activation du formulaire");
     }
   };
 
@@ -169,7 +163,7 @@ export default function LeftPanel({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => handlePublishForm(form.id, e, form.is_published)}
+                    onClick={(e) => handlePublishForm(form.id, e)}
                     className={
                       form.is_published ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'
                     }

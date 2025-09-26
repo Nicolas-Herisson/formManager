@@ -2,6 +2,9 @@ import { Form } from "../models/associations.model";
 import { Request, Response as ExpressResponse } from "express";
 import Question from "../models/questions.model";
 import Option from "../models/option";
+import { v4 as uuidv4 } from "uuid";
+
+const FORM_PATH = "http://localhost:5173/client/form/";
 
 export async function createForm(req: Request, res: ExpressResponse) {
   try {
@@ -333,15 +336,34 @@ export async function publishForm(req: Request, res: ExpressResponse) {
 
     await form.update({ is_published: !form.dataValues.is_published });
 
-    res
-      .status(200)
-      .json({
-        message: form.dataValues.is_published
-          ? "Form published"
-          : "Form unpublished",
-      });
+    res.status(200).json({
+      message: form.dataValues.is_published
+        ? "Form published"
+        : "Form unpublished",
+    });
   } catch (error: any) {
     console.error("Error publishing form:", error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getFormPagePath(req: Request, res: ExpressResponse) {
+  try {
+    const { id } = req.params;
+
+    const form = await Form.findByPk(id);
+
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    const token = uuidv4();
+
+    res
+      .status(200)
+      .json({ path: `${FORM_PATH}${form.dataValues.id}/${token}` });
+  } catch (error: any) {
+    console.error("Error getting form page path:", error);
     res.status(500).json({ error: error.message });
   }
 }
