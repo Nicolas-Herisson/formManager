@@ -11,18 +11,24 @@ export async function getMe(req: Request, res: Response) {
   const userId = req.userId;
 
   if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res
+      .status(401)
+      .json({ status: "error", error: "Vous devez vous connecter" });
   }
 
   const user = await User.findOne({ where: { id: userId } });
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res
+      .status(404)
+      .json({ status: "error", error: "Utilisateur non trouvé" });
   }
 
-  return res
-    .status(200)
-    .json({ id: user.dataValues.id, role_id: user.dataValues.role_id });
+  return res.status(200).json({
+    status: "success",
+    id: user.dataValues.id,
+    role_id: user.dataValues.role_id,
+  });
 }
 
 export async function updateUser() {}

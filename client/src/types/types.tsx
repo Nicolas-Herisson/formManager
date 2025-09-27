@@ -42,6 +42,12 @@ export interface createResponse {
   form_id: number;
 }
 
+export interface updateResponse {
+  form_id: number;
+  response: AnswerMap;
+  token: string;
+}
+
 export interface ParsedResponse {
   id: number;
   form_id: number;

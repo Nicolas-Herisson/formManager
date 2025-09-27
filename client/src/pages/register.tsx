@@ -22,7 +22,7 @@ export default function Register() {
       return;
     }
 
-    if (response?.message === 'User created successfully') {
+    if (response?.status === 'success') {
       toast.success('Inscription reussie');
       navigate('/login');
     } else {
@@ -31,7 +31,7 @@ export default function Register() {
           toast.error(message);
         }
       } else {
-        toast.error(response.message);
+        toast.error(response.error);
       }
     }
   };

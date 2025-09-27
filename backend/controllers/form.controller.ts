@@ -5,8 +5,8 @@ import Option from "../models/option";
 
 export async function createForm(req: Request, res: ExpressResponse) {
   try {
-    console.log("in create form");
     const { title, description, questions } = req.body;
+
     const newForm = await Form.create({
       title,
       description,
@@ -61,7 +61,7 @@ export async function createForm(req: Request, res: ExpressResponse) {
     res.status(201).json(createdForm);
   } catch (error: any) {
     console.error("Error creating form:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -92,7 +92,7 @@ export async function getForms(req: Request, res: ExpressResponse) {
     res.status(200).json(forms);
   } catch (error: any) {
     console.error("Error getting forms:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -123,13 +123,15 @@ export async function getForm(req: Request, res: ExpressResponse) {
     });
 
     if (!form) {
-      return res.status(404).json({ message: "Form not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
     res.status(200).json(form);
   } catch (error: any) {
     console.error("Error getting form:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -157,7 +159,9 @@ export async function updateForm(req: Request, res: ExpressResponse) {
     });
 
     if (!form) {
-      return res.status(404).json({ message: "Form not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
     await form.update({ title, description, is_published });
@@ -165,7 +169,9 @@ export async function updateForm(req: Request, res: ExpressResponse) {
     const questionsInDB = form.dataValues.questions;
 
     if (!questionsInDB) {
-      return res.status(404).json({ message: "Questions not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Questions non trouvées" });
     }
 
     const optionsInDB = questionsInDB.map(
@@ -175,7 +181,9 @@ export async function updateForm(req: Request, res: ExpressResponse) {
     const flatOptionsInDB = optionsInDB.flat();
 
     if (!flatOptionsInDB) {
-      return res.status(404).json({ message: "Options not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Options non trouvées" });
     }
 
     const questionsToDelete = questionsInDB.filter(
@@ -299,7 +307,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
     res.status(200).json(formUpdated);
   } catch (error: any) {
     console.error("Error updating form:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -310,14 +318,16 @@ export async function deleteForm(req: Request, res: ExpressResponse) {
     const form = await Form.findByPk(id);
 
     if (!form) {
-      return res.status(404).json({ message: "Form not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
     await form.destroy();
-    res.status(200).json({ message: "Form deleted successfully" });
+    res.status(200).json({ message: "Formulaire supprimé avec succès" });
   } catch (error: any) {
     console.error("Error deleting form:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -328,7 +338,9 @@ export async function publishForm(req: Request, res: ExpressResponse) {
     const form = await Form.findByPk(id);
 
     if (!form) {
-      return res.status(404).json({ message: "Form not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
     await form.update({ is_published: !form.dataValues.is_published });
@@ -340,6 +352,6 @@ export async function publishForm(req: Request, res: ExpressResponse) {
     });
   } catch (error: any) {
     console.error("Error publishing form:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }

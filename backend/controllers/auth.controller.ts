@@ -11,7 +11,9 @@ export async function login(req: Request, res: Response) {
   const findUser = await User.findOne({ where: { email } });
 
   if (!findUser) {
-    return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+    return res
+      .status(400)
+      .json({ status: "error", error: "Email ou mot de passe incorrect" });
   }
 
   const passwordMatch = await argon2.verify(
@@ -20,7 +22,9 @@ export async function login(req: Request, res: Response) {
   );
 
   if (!passwordMatch) {
-    return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+    return res
+      .status(400)
+      .json({ status: "error", error: "Email ou mot de passe incorrect" });
   }
 
   const accessToken = jwt.sign(
@@ -56,7 +60,7 @@ export async function login(req: Request, res: Response) {
 
   return res
     .status(200)
-    .json({ message: "Vous avez été connecté avec succès" });
+    .json({ status: "success", message: "Vous avez été connecté avec succès" });
 }
 
 export async function register(req: Request, res: Response) {
@@ -65,9 +69,10 @@ export async function register(req: Request, res: Response) {
   const role_id = role === "admin" ? 1 : 2;
 
   if (password !== confirmPassword)
-    return res
-      .status(400)
-      .json({ message: "Les mots de passe ne correspondent pas" });
+    return res.status(400).json({
+      status: "error",
+      error: "Les mots de passe ne correspondent pas",
+    });
 
   const emailValidation = emailSchema.safeParse(email);
   const passwordValidation = passwordSchema.safeParse(password);
@@ -76,21 +81,23 @@ export async function register(req: Request, res: Response) {
     const messages = passwordValidation.error?.issues?.map(
       (issue: any) => issue.message
     );
-    return res.status(400).json({ messages: messages });
+    return res.status(400).json({ status: "error", error: messages });
   }
 
   if (!emailValidation.success) {
     const messages = emailValidation.error?.issues?.map(
       (issue: any) => issue.message
     );
-    return res.status(400).json({ message: messages });
+    return res.status(400).json({ status: "error", error: messages });
   }
 
   try {
     const findUser = await User.findOne({ where: { email } });
 
     if (findUser) {
-      return res.status(400).json({ message: "Cet email est déjà utilisé" });
+      return res
+        .status(400)
+        .json({ status: "error", error: "Cet email est déjà utilisé" });
     }
 
     const hashPassword = await argon2.hash(password);
@@ -102,10 +109,12 @@ export async function register(req: Request, res: Response) {
       role_id: role_id,
     });
 
-    return res.status(201).json({ message: "User created successfully" });
+    return res
+      .status(201)
+      .json({ status: "success", message: "Utilisateur créé avec succès" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ status: "error", error: "Server error" });
   }
 }
 
@@ -113,22 +122,27 @@ export function logout(req: Request, res: Response) {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
   res.clearCookie("csrfToken");
-  return res
-    .status(200)
-    .json({ message: "Vous avez été déconnecté avec succès" });
+  return res.status(200).json({
+    status: "success",
+    message: "Vous avez été déconnecté avec succès",
+  });
 }
 
 export function refresh(req: Request, res: Response) {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res
+      .status(401)
+      .json({ status: "error", error: "Vous devez vous connecter" });
   }
 
   const decoded = jwt.verify(refreshToken, process.env.SALT!);
 
   if (typeof decoded === "string") {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res
+      .status(401)
+      .json({ status: "error", error: "Vous devez vous connecter" });
   }
 
   const accessToken = jwt.sign({ id: decoded.id }, process.env.SALT!, {
@@ -142,5 +156,8 @@ export function refresh(req: Request, res: Response) {
     maxAge: 60 * 60 * 1000,
   });
 
-  return res.status(200).json({ message: "Token refreshed successfully" });
+  return res.status(200).json({
+    status: "success",
+    message: "Votre token a été actualisé avec succès",
+  });
 }

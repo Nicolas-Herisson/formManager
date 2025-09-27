@@ -7,12 +7,41 @@ import { authenticateAndCsrf } from "../middlewares/isAuthenticated.mw";
 const responseRouter = Router();
 
 // public
-responseRouter.post("/:form_id/responses", sanitizer, isPublished, authenticateAndCsrf, responseController.createResponse);
-responseRouter.get("/:form_id/responses/:response_id", responseController.getResponse);
-responseRouter.put("/:form_id/responses/:response_id", sanitizer, isPublished, responseController.updateResponse);
+responseRouter.get(
+  "/:form_id/responses/:response_id",
+  responseController.getResponse
+);
+responseRouter.put(
+  "/:form_id/responses",
+  sanitizer,
+  isPublished,
+  responseController.updateResponse
+);
 
 //private
-responseRouter.get("/:form_id/responses", authenticateAndCsrf, responseController.getResponses);
-responseRouter.delete("/:form_id/responses/:response_id", authenticateAndCsrf, responseController.deleteResponse);
-responseRouter.delete("/:form_id/responses", authenticateAndCsrf, responseController.deleteResponsesByFormId);
+responseRouter.post(
+  "/:form_id/responses",
+  sanitizer,
+  isPublished,
+  authenticateAndCsrf,
+  responseController.createResponse
+);
+
+responseRouter.get(
+  "/:form_id/responses",
+  authenticateAndCsrf,
+  responseController.getResponses
+);
+
+responseRouter.delete(
+  "/:form_id/responses/:response_id",
+  authenticateAndCsrf,
+  responseController.deleteResponse
+);
+
+responseRouter.delete(
+  "/:form_id/responses",
+  authenticateAndCsrf,
+  responseController.deleteResponsesByFormId
+);
 export default responseRouter;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Form, Question, AnswerMap, AnswerValue } from '@/types/types';
 import { fetchGetForm } from '@/services/formRequests';
-import { fetchCreateResponse } from '@/services/responseRequests';
+import { fetchUpdateResponse } from '@/services/responseRequests';
 import { useParams } from 'react-router';
 import { Button } from '@/components/ui/button/button';
 import { toast } from 'sonner';
@@ -52,6 +52,11 @@ export function FormPage() {
 
     const token = getTokenFromResponsePageUrl();
 
+    if (!token) {
+      toast.error('Formulaire invalide');
+      return;
+    }
+
     if (form) {
       for (const q of form.questions) {
         if (q.required) {
@@ -67,9 +72,14 @@ export function FormPage() {
           }
         }
       }
-
+      const payload = { form_id: form.id, response: answers, token };
       try {
-        await fetchCreateResponse({ form_id: form.id, response: answers, token });
+        const response = await fetchUpdateResponse(form.id, payload);
+
+        if (response?.status === 'error') {
+          toast.error(response.error);
+          return;
+        }
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);

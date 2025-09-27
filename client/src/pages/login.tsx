@@ -15,14 +15,14 @@ export default function Login() {
   const onSubmit = async (data: Login) => {
     const response = await fetchLogin(data);
 
-    if (response?.message === 'Vous avez été connecté avec succès') {
+    if (response?.status === 'success') {
       const userResponse = await fetchGetMe();
 
       setUser(userResponse);
       toast.success('Connexion reussie');
       navigate('/');
     } else {
-      toast.error(response);
+      toast.error(response.error);
     }
   };
 

@@ -15,7 +15,7 @@ export async function createResponse(req: Request, res: ExpressResponse) {
     res.status(201).json({ path: `${FORM_PATH}${form_id}/${token}` });
   } catch (error: any) {
     console.error("Error creating response:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -31,7 +31,7 @@ export async function getResponses(req: Request, res: ExpressResponse) {
     res.status(200).json(responses);
   } catch (error: any) {
     console.error("Error fetching responses:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -44,13 +44,15 @@ export async function getResponse(req: Request, res: ExpressResponse) {
     });
 
     if (!response) {
-      return res.status(404).json({ error: "Response not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Réponse non trouvée" });
     }
 
     res.status(200).json(response);
   } catch (error: any) {
     console.error("Error fetching response:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -63,7 +65,9 @@ export async function deleteResponse(req: Request, res: ExpressResponse) {
     });
 
     if (!response) {
-      return res.status(404).json({ error: "Response not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Réponse non trouvée" });
     }
 
     await response.destroy();
@@ -71,7 +75,7 @@ export async function deleteResponse(req: Request, res: ExpressResponse) {
     res.status(204).send();
   } catch (error: any) {
     console.error("Error deleting response:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -89,31 +93,42 @@ export async function deleteResponsesByFormId(
     res.status(204).send();
   } catch (error: any) {
     console.error("Error deleting responses:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
 export async function updateResponse(req: Request, res: ExpressResponse) {
   try {
-    const { form_id, response_id } = req.params;
-    const { response } = req.body;
+    const { form_id, response, token } = req.body;
 
     const existingResponse = await ResponseModel.findOne({
-      where: { form_id, id: response_id },
+      where: { form_id },
     });
 
     if (!existingResponse) {
-      return res.status(404).json({ error: "Response not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
-    existingResponse.response = response;
+    if (existingResponse.dataValues.token !== token) {
+      return res
+        .status(401)
+        .json({
+          status: "error",
+          error: "Vous avez déjà soumis ce formulaire",
+        });
+    }
 
-    await existingResponse.save();
+    const updatedResponse = await existingResponse.update({
+      response: JSON.stringify(response),
+      token: "",
+    });
 
-    res.status(200).json(existingResponse);
+    res.status(200).json(updatedResponse.dataValues);
   } catch (error: any) {
     console.error("Error updating response:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
 
@@ -124,7 +139,9 @@ export async function getFormPagePath(req: Request, res: ExpressResponse) {
     const form = await Form.findByPk(id);
 
     if (!form) {
-      return res.status(404).json({ message: "Form not found" });
+      return res
+        .status(404)
+        .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
     const token = uuidv4();
@@ -134,6 +151,6 @@ export async function getFormPagePath(req: Request, res: ExpressResponse) {
       .json({ path: `${FORM_PATH}${form.dataValues.id}/${token}` });
   } catch (error: any) {
     console.error("Error getting form page path:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 }
