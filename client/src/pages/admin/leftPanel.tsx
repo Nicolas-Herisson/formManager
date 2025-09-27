@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button/button';
 import { fetchLogout } from '@/services/authRequests';
 import { fetchPublishForm } from '@/services/formRequests';
 import { useNavigate } from 'react-router';
-import { fetchGetFormPagePath } from '@/services/formRequests';
+import { fetchCreateResponse } from '@/services/responseRequests';
 
 export default function LeftPanel({
   setShowRightPanel,
@@ -18,7 +18,7 @@ export default function LeftPanel({
 
   const handleCopyLink = async (formId: number) => {
     try {
-      const { path } = await fetchGetFormPagePath(formId);
+      const { path } = await fetchCreateResponse({ form_id: formId });
       await navigator.clipboard.writeText(path);
 
       toast.success('Lien copié !', {

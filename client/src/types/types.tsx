@@ -35,6 +35,11 @@ export interface Response {
   id?: number;
   form_id: number;
   response: string | AnswerMap;
+  token?: string;
+}
+
+export interface createResponse {
+  form_id: number;
 }
 
 export interface ParsedResponse {

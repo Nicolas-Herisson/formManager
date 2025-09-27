@@ -28,10 +28,5 @@ formRouter.put(
   authenticateAndCsrf,
   formController.publishForm
 );
-formRouter.get(
-  "/forms/:id/path",
-  authenticateAndCsrf,
-  formController.getFormPagePath
-);
 
 export default formRouter;

@@ -63,13 +63,3 @@ export async function fetchPublishForm(id: number) {
     return null;
   }
 }
-
-export async function fetchGetFormPagePath(id: number) {
-  try {
-    const { data } = await httpRequester.get(`/forms/${id}/path`);
-    return data;
-  } catch (error) {
-    console.error('Error getting form page path:', error);
-    return null;
-  }
-}

@@ -5,6 +5,7 @@ import { fetchCreateResponse } from '@/services/responseRequests';
 import { useParams } from 'react-router';
 import { Button } from '@/components/ui/button/button';
 import { toast } from 'sonner';
+import getTokenFromResponsePageUrl from '@/utils/getTokenFromUrl';
 
 export function FormPage() {
   const [form, setForm] = useState<Form | null>(null);
@@ -49,6 +50,8 @@ export function FormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const token = getTokenFromResponsePageUrl();
+
     if (form) {
       for (const q of form.questions) {
         if (q.required) {
@@ -66,7 +69,7 @@ export function FormPage() {
       }
 
       try {
-        await fetchCreateResponse({ form_id: form.id, response: answers });
+        await fetchCreateResponse({ form_id: form.id, response: answers, token });
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);

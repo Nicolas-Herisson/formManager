@@ -4,9 +4,9 @@ import type { Form } from '@/types/types';
 import { useState, useEffect, useCallback } from 'react';
 import { fetchGetForms, fetchCreateForm, fetchDeleteForm, fetchUpdateForm } from '@/services/formRequests';
 import { useNavigate } from 'react-router';
-import type { User } from '@/types/types';
+import { useUser } from '@/contexts/user.context';
 
-function MainPage({ user }: { user: User | null }) {
+function MainPage() {
   const navigate = useNavigate();
   const [showRightPanel, setShowRightPanel] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
@@ -17,6 +17,8 @@ function MainPage({ user }: { user: User | null }) {
     is_published: false,
     questions: []
   });
+
+  const { user } = useUser();
 
   async function addForm(form: Form) {
     await fetchCreateForm(form);

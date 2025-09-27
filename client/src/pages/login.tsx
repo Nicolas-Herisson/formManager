@@ -4,15 +4,21 @@ import { Button } from '@/components/ui/button/button';
 import type { Login } from '../types/types';
 import { toast } from 'sonner';
 import { fetchLogin } from '../services/authRequests';
+import { useUser } from '@/contexts/user.context';
+import { fetchGetMe } from '../services/userRequests';
 
 export default function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<Login>();
+  const { setUser } = useUser();
 
   const onSubmit = async (data: Login) => {
     const response = await fetchLogin(data);
 
     if (response?.message === 'Vous avez été connecté avec succès') {
+      const userResponse = await fetchGetMe();
+
+      setUser(userResponse);
       toast.success('Connexion reussie');
       navigate('/');
     } else {

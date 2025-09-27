@@ -17,6 +17,11 @@ export default function Register() {
     data.role = 'user';
     const response = await fetchRegister(data);
 
+    if (!response) {
+      toast.error('Une erreur est survenue');
+      return;
+    }
+
     if (response?.message === 'User created successfully') {
       toast.success('Inscription reussie');
       navigate('/login');
@@ -26,7 +31,7 @@ export default function Register() {
           toast.error(message);
         }
       } else {
-        toast.error(response);
+        toast.error(response.message);
       }
     }
   };
