@@ -16,6 +16,7 @@ userRouter.get("/users/roles", authenticateAndCsrf, userController.getRoles);
 
 // public
 userRouter.post("/user", userController.createUser);
+userRouter.patch("/users/:id/reset-password", userController.resetPassword);
 userRouter.get("/users", userController.getUsers);
 userRouter.get("/users/:id", userController.getUser);
 userRouter.put("/users/:id", userController.updateUser);

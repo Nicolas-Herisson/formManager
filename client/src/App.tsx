@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import Login from './pages/login';
 import Register from './pages/register';
 import AdminDashboard from './pages/admin/adminDashboard';
+import ResetPassword from './pages/resetPassword';
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
         <Route
           path="/admin/dashboard"
           element={<AdminDashboard />}
+        />
+        <Route
+          path="/reset-password/:id"
+          element={<ResetPassword />}
         />
       </Routes>
     </>

@@ -89,3 +89,15 @@ export interface Register {
   confirmPassword: string;
   role: string;
 }
+
+export interface ResetPassword {
+  id: string;
+  password: string;
+  confirmPassword?: string;
+}
+
+export interface InviteUser {
+  name: string;
+  email: string;
+  role_id: number;
+}

@@ -5,10 +5,12 @@ import { Role } from '@/types/types';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button/button';
 import { toast } from 'sonner';
+import { InviteUser } from '@/types/types';
+import { fetchInviteUser } from '@/services/userRequests';
 
 export default function AdminDashboard() {
   const [roles, setRoles] = useState<Role[]>([]);
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, reset } = useForm<InviteUser>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -24,20 +26,21 @@ export default function AdminDashboard() {
     fetchRoles();
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: InviteUser) => {
     setIsSubmitting(true);
-    const loadingToast = toast.loading("Envoi de l'invitation en cours...");
 
     try {
-      console.log("Données d'invitation:", data);
+      const response = await fetchInviteUser(data.email, data.name, data.role_id);
 
-      toast.success('Invitation envoyée avec succès', { id: loadingToast });
-
-      setValue('email', '');
-      setValue('role', '');
+      if (response.status === 'success') {
+        //reset();
+        toast.success(response.message);
+      } else {
+        toast.error(response);
+      }
     } catch (error) {
       console.error('sendInvite error:', error);
-      toast.error("Erreur lors de l'envoi de l'invitation", { id: loadingToast });
+      toast.error("Erreur lors de l'envoi de l'invitation");
     } finally {
       setIsSubmitting(false);
     }
@@ -59,6 +62,23 @@ export default function AdminDashboard() {
         >
           <div>
             <label
+              htmlFor="name"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
+              Nom *
+            </label>
+            <input
+              id="name"
+              type="text"
+              required
+              {...register('name')}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              placeholder="Nom"
+            />
+          </div>
+
+          <div>
+            <label
               htmlFor="email"
               className="mb-1 block text-sm font-medium text-gray-700"
             >
@@ -76,15 +96,15 @@ export default function AdminDashboard() {
 
           <div>
             <label
-              htmlFor="role"
+              htmlFor="role_id"
               className="mb-1 block text-sm font-medium text-gray-700"
             >
               Rôle *
             </label>
             <select
-              id="role"
+              id="role_id"
               required
-              {...register('role')}
+              {...register('role_id')}
               className="mt-1 block w-full rounded-md border-gray-300 py-2 pr-10 pl-3 text-base focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
               defaultValue=""
             >

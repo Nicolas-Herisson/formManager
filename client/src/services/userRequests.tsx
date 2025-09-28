@@ -28,3 +28,31 @@ export async function fetchGetRoles() {
     throw error;
   }
 }
+
+export async function fetchResetPassword(id: string, password: string, confirmPassword: string) {
+  try {
+    const response = await httpRequester.patch(`/users/${id}/reset-password`, { id, password, confirmPassword });
+
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return error.response?.data.error;
+    }
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function fetchInviteUser(email: string, name: string, role_id: number) {
+  try {
+    const response = await httpRequester.post('/users/invite', { email, name, role_id });
+
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return error.response?.data.error;
+    }
+    console.log(error);
+    throw error;
+  }
+}
