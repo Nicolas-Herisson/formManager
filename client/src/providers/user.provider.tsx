@@ -8,20 +8,25 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const userData = await fetchGetMe();
+    console.log('UserContextProvider');
+    try {
+      async function fetchData() {
+        try {
+          const userData = await fetchGetMe();
 
-        if (userData) {
-          setUser(userData);
+          if (userData) {
+            setUser(userData);
+          }
+        } catch (error) {
+          setUser(null);
+          console.error(error);
         }
-      } catch (error) {
-        setUser(null);
-        console.error(error);
       }
-    }
 
-    fetchData();
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const logout = async () => {
@@ -32,5 +37,9 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     }
   };
 
-  return <UserContext.Provider value={{ user, setUser, logout }}>{children}</UserContext.Provider>;
+  const getUser = () => {
+    return user;
+  };
+
+  return <UserContext.Provider value={{ user, setUser, logout, getUser }}>{children}</UserContext.Provider>;
 };

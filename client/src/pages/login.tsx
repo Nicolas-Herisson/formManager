@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { fetchLogin } from '../services/authRequests';
 import { useUser } from '@/contexts/user.context';
 import { fetchGetMe } from '../services/userRequests';
+import { useEffect } from 'react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,18 +14,26 @@ export default function Login() {
   const { setUser } = useUser();
 
   const onSubmit = async (data: Login) => {
-    const response = await fetchLogin(data);
+    try {
+      const response = await fetchLogin(data);
 
-    if (response?.status === 'success') {
-      const userResponse = await fetchGetMe();
-
-      setUser(userResponse);
-      toast.success('Connexion reussie');
-      navigate('/');
-    } else {
-      toast.error(response.error);
+      if (response?.status === 'success') {
+        const userResponse = await fetchGetMe();
+        setUser(userResponse);
+        toast.success('Connexion reussie');
+        navigate('/');
+      } else {
+        toast.error(response);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Connexion echouee');
     }
   };
+
+  useEffect(() => {
+    setUser(null);
+  }, []);
 
   return (
     <div className="flex h-screen items-center justify-center gap-4">

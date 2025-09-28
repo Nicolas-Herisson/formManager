@@ -1,15 +1,19 @@
-import Header from '../header/header';
 import Body from '../body';
 import { useState } from 'react';
 import type { Form } from '@/types/types';
+import Header from '../header/header';
 
 export default function RightPanel({ form, setForm, updateForm, addForm, selectedForm }: IRightPanelProps) {
   const [selectedPage, setSelectedPage] = useState<string>('edit');
 
   return (
-    <div className="right-panel h-screen w-7/8 overflow-y-auto">
-      <Header selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
-      {selectedForm && (
+    <>
+      <div className="right-panel h-screen w-7/8 overflow-y-auto">
+        <Header
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+          selectedForm={selectedForm}
+        />
         <Body
           form={form}
           setForm={setForm}
@@ -18,8 +22,8 @@ export default function RightPanel({ form, setForm, updateForm, addForm, selecte
           selectedPage={selectedPage}
           selectedForm={selectedForm}
         />
-      )}
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -7,13 +7,7 @@ import { fetchPublishForm } from '@/services/formRequests';
 import { useNavigate } from 'react-router';
 import { fetchCreateResponse } from '@/services/responseRequests';
 
-export default function LeftPanel({
-  setShowRightPanel,
-  forms,
-  setSelectedForm,
-  deleteForm,
-  refetchForms
-}: ILeftPanelProps) {
+export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchForms }: ILeftPanelProps) {
   const navigate = useNavigate();
 
   const handleCopyLink = async (formId: number) => {
@@ -109,7 +103,6 @@ export default function LeftPanel({
 
         <Button
           onClick={() => {
-            setShowRightPanel(true);
             setSelectedForm({
               id: -Date.now(),
               title: 'Nouveau formulaire',
@@ -136,7 +129,6 @@ export default function LeftPanel({
               className="cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:border-blue-300"
               onClick={() => {
                 setSelectedForm(form);
-                setShowRightPanel(true);
               }}
             >
               <div className="flex flex-col items-start justify-between">
@@ -199,7 +191,6 @@ export default function LeftPanel({
 }
 
 interface ILeftPanelProps {
-  setShowRightPanel: (show: boolean) => void;
   forms: Form[];
   setSelectedForm: (form: Form) => void;
   deleteForm: (id: number) => Promise<void>;

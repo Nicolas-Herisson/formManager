@@ -20,6 +20,7 @@ httpRequester.interceptors.request.use(
     if (csrfToken && applyCSRF(config.url!, config.method!)) {
       config.headers['X-CSRF-Token'] = csrfToken;
     }
+
     return config;
   },
   (error) => {
@@ -42,6 +43,7 @@ httpRequester.interceptors.response.use(
 
       try {
         await httpRequester.post('/refresh', {}, { withCredentials: true });
+
         return httpRequester(originalRequest);
       } catch (error) {
         console.log(error);

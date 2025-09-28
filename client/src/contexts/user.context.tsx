@@ -5,12 +5,14 @@ type UserContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
+  getUser: () => User | null;
 };
 
 export const UserContext = createContext<UserContextType>({
   user: null,
   setUser: () => {},
-  logout: () => Promise.resolve()
+  logout: () => Promise.resolve(),
+  getUser: () => null
 });
 
 export function useUser() {

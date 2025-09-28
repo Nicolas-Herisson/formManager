@@ -1,5 +1,6 @@
 import httpRequester from './axios.config';
 import type { Form } from '../types/types';
+import { isAxiosError } from 'axios';
 
 export async function fetchGetForms() {
   try {
@@ -7,6 +8,7 @@ export async function fetchGetForms() {
 
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error fetching forms:', error);
     return [];
   }
@@ -17,6 +19,7 @@ export async function fetchGetForm(id: number) {
     const { data } = await httpRequester.get(`/forms/${id}`);
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error fetching form:', error);
     return null;
   }
@@ -27,6 +30,7 @@ export async function fetchCreateForm(form: Form) {
     const { data } = await httpRequester.post('/forms', form);
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error creating form:', error);
     return null;
   }
@@ -38,6 +42,7 @@ export async function fetchDeleteForm(id: number) {
 
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error deleting form:', error);
     return null;
   }
@@ -48,6 +53,7 @@ export async function fetchUpdateForm(form: Form) {
     const { data } = await httpRequester.put(`/forms/${form.id}`, form);
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error updating form:', error);
     return null;
   }
@@ -59,6 +65,7 @@ export async function fetchPublishForm(id: number) {
 
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
     console.error('Error publishing form:', error);
     return null;
   }

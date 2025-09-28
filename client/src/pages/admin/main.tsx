@@ -8,7 +8,6 @@ import { useUser } from '@/contexts/user.context';
 
 function MainPage() {
   const navigate = useNavigate();
-  const [showRightPanel, setShowRightPanel] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
   const [selectedForm, setSelectedForm] = useState<Form>({
     id: -Date.now(),
@@ -53,21 +52,19 @@ function MainPage() {
       {user && (
         <>
           <LeftPanel
-            setShowRightPanel={setShowRightPanel}
             forms={forms}
             setSelectedForm={setSelectedForm}
             deleteForm={deleteForm}
             refetchForms={fetchForms}
           />
-          {showRightPanel && (
-            <RightPanel
-              form={selectedForm}
-              setForm={setSelectedForm}
-              updateForm={updateForm}
-              addForm={addForm}
-              selectedForm={selectedForm}
-            />
-          )}
+
+          <RightPanel
+            form={selectedForm}
+            setForm={setSelectedForm}
+            updateForm={updateForm}
+            addForm={addForm}
+            selectedForm={selectedForm}
+          />
         </>
       )}
     </div>

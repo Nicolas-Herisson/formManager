@@ -4,14 +4,13 @@ import type { Login, Register } from '../types/types';
 
 export async function fetchLogin(user: Login) {
   try {
-    const { data } = await httpRequester.post('/login', user);
+    const response = await httpRequester.post('/login', user);
 
-    return data;
+    return response.data;
   } catch (error) {
-    if (isAxiosError(error)) return error.response?.data.message;
+    if (isAxiosError(error)) return error.response?.data.error;
 
     console.error('Error logging in:', error);
-
     return null;
   }
 }
@@ -22,7 +21,7 @@ export async function fetchRegister(user: Register) {
 
     return data;
   } catch (error: unknown) {
-    if (isAxiosError(error)) return error.response?.data.message;
+    if (isAxiosError(error)) return error.response?.data.error;
 
     console.error('Error registering user:', error);
 
@@ -36,6 +35,8 @@ export async function fetchLogout() {
 
     return data;
   } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
+
     console.error('Error logging out:', error);
     return null;
   }

@@ -72,6 +72,11 @@ export interface User {
   role_id: number;
 }
 
+export interface Role {
+  id: number;
+  name: string;
+}
+
 export interface Login {
   email: string;
   password: string;

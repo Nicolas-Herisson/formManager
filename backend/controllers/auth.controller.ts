@@ -8,59 +8,66 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
-  const findUser = await User.findOne({ where: { email } });
 
-  if (!findUser) {
-    return res
-      .status(400)
-      .json({ status: "error", error: "Email ou mot de passe incorrect" });
+  try {
+    const findUser = await User.findOne({ where: { email } });
+
+    if (!findUser) {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Email ou mot de passe incorrect" });
+    }
+
+    const passwordMatch = await argon2.verify(
+      findUser.dataValues.password,
+      password
+    );
+
+    if (!passwordMatch) {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Email ou mot de passe incorrect" });
+    }
+
+    const accessToken = jwt.sign(
+      { id: findUser.dataValues.id, role_id: findUser.dataValues.role_id },
+      process.env.SALT!,
+      { expiresIn: "1h" }
+    );
+    const refreshToken = jwt.sign(
+      { id: findUser.dataValues.id },
+      process.env.SALT!,
+      { expiresIn: "1d" }
+    );
+    const csrfToken = uuidv4();
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.cookie("csrfToken", csrfToken, {
+      httpOnly: false,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Vous avez été connecté avec succès",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", error: "Server error" });
   }
-
-  const passwordMatch = await argon2.verify(
-    findUser.dataValues.password,
-    password
-  );
-
-  if (!passwordMatch) {
-    return res
-      .status(400)
-      .json({ status: "error", error: "Email ou mot de passe incorrect" });
-  }
-
-  const accessToken = jwt.sign(
-    { id: findUser.dataValues.id, role_id: findUser.dataValues.role_id },
-    process.env.SALT!,
-    { expiresIn: "1h" }
-  );
-  const refreshToken = jwt.sign(
-    { id: findUser.dataValues.id },
-    process.env.SALT!,
-    { expiresIn: "1d" }
-  );
-  const csrfToken = uuidv4();
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-  res.cookie("csrfToken", csrfToken, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  return res
-    .status(200)
-    .json({ status: "success", message: "Vous avez été connecté avec succès" });
 }
 
 export async function register(req: Request, res: Response) {

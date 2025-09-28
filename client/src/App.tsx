@@ -4,6 +4,7 @@ import MainPage from './pages/admin/main';
 import { Toaster } from 'sonner';
 import Login from './pages/login';
 import Register from './pages/register';
+import AdminDashboard from './pages/admin/adminDashboard';
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
         <Route
           path="/client/form/:id/:token"
           element={<FormPage />}
+        />
+        <Route
+          path="/admin/dashboard"
+          element={<AdminDashboard />}
         />
       </Routes>
     </>
