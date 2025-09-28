@@ -33,7 +33,7 @@ export default function AdminDashboard() {
       const response = await fetchInviteUser(data.email, data.name, data.role_id);
 
       if (response.status === 'success') {
-        //reset();
+        reset();
         toast.success(response.message);
       } else {
         toast.error(response);

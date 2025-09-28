@@ -37,3 +37,5 @@
 |--------|------|----------|-------|
 | ⏳ | Centralize toast style | UI/UX | Consistent notifications |
 | ⏳ | upgrade header and admin dashboard | UI/UX | Consistent design |
+| ⏳ | use cards components | UI/UX | Consistent design |
+
