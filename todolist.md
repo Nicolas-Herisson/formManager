@@ -16,21 +16,24 @@
 | ✅ | Logout | Authentication | - |
 | ⏳ | Add image on questions | Form Builder | - |
 | ⏳ | User role restrictions | Authorization | Can't save or delete forms |
-| ⏳ | Setup test forms | Testing | 2-3 sample forms needed |
-| ⏳ | Add collab role | Authorization | Can't manage invites |
-| ⏳ | Admin dashboard | Admin Features | User management required |
-| ⏳ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |
-| ⏳ | subtask: Invite user | Admin Features | create user + send mail |
-| ⏳ | subtask: create reset password | Backend | update user + redirect to login |
+| ✅ | Admin dashboard | Admin Features | User management required |
+| ✅ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |
+| ✅ | subtask: Invite user | Admin Features | create user + send mail |
+| ✅ | subtask: create reset password | Backend | update user + redirect to login |
+| ⏳ | admin dashboard delete invite | Admin Features |  |
+| ⏳ | admin dashboard delete users | Admin Features |  |
 
 ## Secondary Tasks
 
 | Status | Task | Category | Notes |
 |--------|------|----------|-------|
 | ⏳ | Refactor form controller | Code Quality | - |
+| ⏳ | Setup test forms | Testing | 2-3 sample forms needed |
+| ⏳ | Add test role | Authorization | Can only test, no register |
 
 ## Nice-to-Have
 
 | Status | Task | Category | Notes |
 |--------|------|----------|-------|
 | ⏳ | Centralize toast style | UI/UX | Consistent notifications |
+| ⏳ | upgrade header and admin dashboard | UI/UX | Consistent design |
