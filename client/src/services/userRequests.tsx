@@ -56,3 +56,17 @@ export async function fetchDeleteUser(id: string) {
     throw error;
   }
 }
+
+export async function fetchGetUsers() {
+  try {
+    const response = await httpRequester.get('/users');
+
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return error.response?.data.error;
+    }
+    console.log(error);
+    throw error;
+  }
+}

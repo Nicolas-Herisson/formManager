@@ -7,13 +7,14 @@ const userRouter = Router();
 // private
 userRouter.get("/users/me", authenticateAndCsrf, userController.getMe);
 userRouter.get("/users/roles", authenticateAndCsrf, userController.getRoles);
+userRouter.post("/user", authenticateAndCsrf, userController.createUser);
+userRouter.get("/users", authenticateAndCsrf, userController.getUsers);
+userRouter.get("/users/:id", authenticateAndCsrf, userController.getUser);
+userRouter.put("/users/:id", authenticateAndCsrf, userController.updateUser);
+userRouter.delete("/users/:id", authenticateAndCsrf, userController.deleteUser);
 
 // public
-userRouter.post("/user", userController.createUser);
+
 userRouter.patch("/users/:id/reset-password", userController.resetPassword);
-userRouter.get("/users", userController.getUsers);
-userRouter.get("/users/:id", userController.getUser);
-userRouter.put("/users/:id", userController.updateUser);
-userRouter.delete("/users/:id", userController.deleteUser);
 
 export default userRouter;

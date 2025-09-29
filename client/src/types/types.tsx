@@ -76,6 +76,11 @@ export interface getMe {
   id: number;
   role_id: number;
 }
+
+export interface DeleteUser {
+  user_id: string;
+}
+
 export interface Role {
   id: number;
   name: string;

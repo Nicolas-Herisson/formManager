@@ -1,24 +1,28 @@
 import { useEffect } from 'react';
 import { fetchGetRoles } from '@/services/userRequests';
 import { useState } from 'react';
-import { Role } from '@/types/types';
+import { Role, Invite, DeleteInvite, DeleteUser, InviteUser, User } from '@/types/types';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button/button';
 import { toast } from 'sonner';
-import { InviteUser } from '@/types/types';
 import { fetchGetInvites, fetchDeleteInvite, fetchInviteUser } from '@/services/inviteRequests';
-import { Invite } from '@/types/types';
-import { DeleteInvite } from '@/types/types';
+import { fetchDeleteUser, fetchGetUsers } from '@/services/userRequests';
 
 export default function AdminDashboard() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [invites, setInvites] = useState<Invite[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const { register: registerInvite, handleSubmit: handleSubmitInvite, reset: resetInvite } = useForm<InviteUser>();
   const {
     register: registerDeleteInvite,
     handleSubmit: handleSubmitDeleteInvite,
     reset: resetDeleteInvite
   } = useForm<DeleteInvite>();
+  const {
+    register: registerDeleteUser,
+    handleSubmit: handleSubmitDeleteUser,
+    reset: resetDeleteUser
+  } = useForm<DeleteUser>();
 
   const fetchInvites = async () => {
     try {
@@ -27,6 +31,21 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('loadInvites error:', error);
       toast.error('Erreur lors du chargement des invitations');
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetchGetUsers();
+
+      if (response.status === 'success') {
+        setUsers(response.users);
+      } else {
+        toast.error(response);
+      }
+    } catch (error) {
+      console.error('deleteUser error:', error);
+      toast.error("Erreur lors de la suppression de l'utilisateur");
     }
   };
 
@@ -43,6 +62,7 @@ export default function AdminDashboard() {
 
     fetchRoles();
     fetchInvites();
+    fetchUsers();
   }, []);
 
   const handleInviteSubmit = async (data: InviteUser) => {
@@ -51,6 +71,7 @@ export default function AdminDashboard() {
 
       if (response.status === 'success') {
         await fetchInvites();
+        await fetchUsers();
 
         toast.success(response.message);
 
@@ -79,6 +100,25 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('deleteInvite error:', error);
       toast.error("Erreur lors de la suppression de l'invitation");
+    }
+  };
+
+  const handleDeleteUserSubmit = async (data: DeleteUser) => {
+    try {
+      const response = await fetchDeleteUser(data.user_id);
+
+      if (response.status === 'success') {
+        await fetchUsers();
+        await fetchInvites();
+
+        toast.success(response.message);
+        resetDeleteUser();
+      } else {
+        toast.error(response);
+      }
+    } catch (error) {
+      console.error('deleteUser error:', error);
+      toast.error("Erreur lors de la suppression de l'utilisateur");
     }
   };
 
@@ -173,6 +213,7 @@ export default function AdminDashboard() {
           </div>
         </form>
       </div>
+
       <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
         <form
           onSubmit={handleSubmitDeleteInvite(handleDeleteInviteSubmit)}
@@ -208,6 +249,45 @@ export default function AdminDashboard() {
             className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
           >
             Supprimer l'invitation
+          </Button>
+        </form>
+      </div>
+
+      <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
+        <form
+          onSubmit={handleSubmitDeleteUser(handleDeleteUserSubmit)}
+          className="space-y-6"
+        >
+          <h2 className="mb-6 text-xl font-semibold text-gray-800">Supprimer un utilisateur</h2>
+          <div className="rounded-lg border bg-white">
+            <select
+              id="user_id"
+              required
+              {...registerDeleteUser('user_id')}
+              className="mt-1 block w-full rounded-md border-gray-300 py-2 pr-10 pl-3 text-base focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
+              defaultValue=""
+            >
+              <option
+                value=""
+                disabled
+              >
+                Sélectionner un utilisateur
+              </option>
+              {users.map((user) => (
+                <option
+                  key={user.id}
+                  value={user.id}
+                >
+                  {user.name + ' | ' + user.email}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Button
+            type="submit"
+            className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+          >
+            Supprimer l'utilisateur
           </Button>
         </form>
       </div>
