@@ -42,3 +42,17 @@ export async function fetchResetPassword(id: string, password: string, confirmPa
     throw error;
   }
 }
+
+export async function fetchDeleteUser(id: string) {
+  try {
+    const response = await httpRequester.delete(`/users/${id}`);
+
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return error.response?.data.error;
+    }
+    console.log(error);
+    throw error;
+  }
+}

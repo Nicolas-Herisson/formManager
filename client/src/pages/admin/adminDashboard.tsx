@@ -19,7 +19,6 @@ export default function AdminDashboard() {
     handleSubmit: handleSubmitDeleteInvite,
     reset: resetDeleteInvite
   } = useForm<DeleteInvite>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchInvites = async () => {
     try {
@@ -47,16 +46,15 @@ export default function AdminDashboard() {
   }, []);
 
   const handleInviteSubmit = async (data: InviteUser) => {
-    setIsSubmitting(true);
-
     try {
       const response = await fetchInviteUser(data.email, data.name, data.role_id);
 
       if (response.status === 'success') {
-        resetInvite();
-        toast.success(response.message);
         await fetchInvites();
-        setIsSubmitting(false);
+
+        toast.success(response.message);
+
+        resetInvite();
       } else {
         toast.error(response);
       }
@@ -67,16 +65,14 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteInviteSubmit = async (data: DeleteInvite) => {
-    setIsSubmitting(true);
-
     try {
       const response = await fetchDeleteInvite(data.invite_id);
 
       if (response.status === 'success') {
-        resetDeleteInvite();
         await fetchInvites();
+
         toast.success(response.message);
-        setIsSubmitting(false);
+        resetDeleteInvite();
       } else {
         toast.error(response);
       }
@@ -170,10 +166,9 @@ export default function AdminDashboard() {
           <div className="flex justify-end pt-2">
             <Button
               type="submit"
-              disabled={isSubmitting}
               className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
             >
-              {isSubmitting ? 'Envoi en cours...' : "Envoyer l'invitation"}
+              Envoyer l'invitation
             </Button>
           </div>
         </form>
@@ -210,10 +205,9 @@ export default function AdminDashboard() {
           </div>
           <Button
             type="submit"
-            disabled={isSubmitting}
             className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
           >
-            {isSubmitting ? 'Envoi en cours...' : "Supprimer l'invitation"}
+            Supprimer l'invitation
           </Button>
         </form>
       </div>

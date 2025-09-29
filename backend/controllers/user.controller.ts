@@ -41,7 +41,34 @@ export async function getMe(req: Request, res: Response) {
 
 export async function updateUser() {}
 
-export async function deleteUser() {}
+export async function deleteUser(req: Request, res: Response) {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res
+        .status(400)
+        .json({ status: "error", error: "L'id est requis" });
+    }
+
+    const deletedUser = await User.destroy({ where: { id } });
+
+    if (!deletedUser) {
+      return res
+        .status(404)
+        .json({ status: "error", error: "Utilisateur non trouvé" });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Utilisateur supprimé avec succès",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ status: "error", error: "Une erreur est survenue" });
+  }
+}
 
 export async function getRoles(req: Request, res: Response) {
   try {

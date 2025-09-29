@@ -155,12 +155,44 @@ export async function deleteInvite(req: Request, res: Response) {
         .json({ status: "error", error: "L'ID est requis" });
     }
 
+    const invite = await Invite.findOne({
+      where: { id },
+      include: [{ model: User, as: "receiver", required: true }],
+      nest: true,
+      raw: false,
+    }).then((user) => user?.get({ plain: true }));
+
+    if (!invite) {
+      return res
+        .status(404)
+        .json({ status: "error", error: "Aucune invitation trouvée" });
+    }
+
+    const user = await User.findOne({ where: { id: invite.receiver_id } });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "error", error: "Utilisateur non trouvé" });
+    }
+
     const deletedInvite = await Invite.destroy({ where: { id } });
 
     if (!deletedInvite) {
       return res
         .status(404)
         .json({ status: "error", error: "Aucune invitation trouvée" });
+    }
+
+    const deletedUser = await User.destroy({
+      where: { id: invite.receiver_id },
+    });
+
+    if (!deletedUser) {
+      return res.status(404).json({
+        status: "error",
+        error: "Erreur lors de la suppression de l'utilisateur",
+      });
     }
 
     return res.status(200).json({
