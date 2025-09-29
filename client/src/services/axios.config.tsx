@@ -46,7 +46,7 @@ httpRequester.interceptors.response.use(
 
         return httpRequester(originalRequest);
       } catch (error) {
-        console.log(error);
+        return Promise.reject(error);
       }
     }
 

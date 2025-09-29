@@ -72,6 +72,10 @@ export interface User {
   role_id: number;
 }
 
+export interface getMe {
+  id: number;
+  role_id: number;
+}
 export interface Role {
   id: number;
   name: string;

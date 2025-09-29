@@ -26,7 +26,9 @@ function MainPage() {
 
   async function deleteForm(id: number) {
     await fetchDeleteForm(id);
+
     setForms(await fetchGetForms());
+
     if (selectedForm.id === id || forms.length === 0)
       setSelectedForm({ id: -Date.now(), title: '', description: '', is_published: false, questions: [] });
   }
@@ -39,11 +41,12 @@ function MainPage() {
   const fetchForms = useCallback(async () => {
     const fetchedForms = await fetchGetForms();
 
-    if (fetchedForms.length > 0) setForms(fetchedForms);
+    if (fetchedForms.status === 'success') setForms(fetchedForms);
   }, []);
 
   useEffect(() => {
     if (!user && !isLoading) navigate('/login');
+
     fetchForms();
   }, [fetchForms, navigate, user, isLoading]);
 

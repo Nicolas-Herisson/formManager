@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react';
-import type { User } from '../types/types';
+import type { getMe } from '../types/types';
 
 type UserContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: getMe | null;
+  setUser: (user: getMe | null) => void;
   logout: () => Promise<void>;
-  getUser: () => User | null;
+  getUser: () => getMe | null;
   isLoading: boolean;
 };
 

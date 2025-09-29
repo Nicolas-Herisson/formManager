@@ -1,11 +1,11 @@
 import { fetchGetMe } from '../services/userRequests';
 import { useState, useEffect, useCallback } from 'react';
 import { fetchLogout } from '../services/authRequests';
-import type { User } from '../types/types';
+import type { getMe } from '../types/types';
 import { UserContext } from '../contexts/user.context';
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<getMe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -20,13 +20,18 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     try {
       const userData = await fetchGetMe();
 
-      if (userData) {
-        setUser(userData);
-        setIsLoading(false);
+      if (userData.status === 'success') {
+        const user = {
+          id: userData.id,
+          role_id: userData.role_id
+        };
+        setUser(user);
       }
+      setIsLoading(false);
     } catch (error) {
       setUser(null);
       console.error(error);
+      setIsLoading(false);
     }
   }, []);
 
@@ -35,6 +40,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
 
     if (response) {
       setUser(null);
+      setIsLoading(true);
     }
   };
 
