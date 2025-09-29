@@ -4,6 +4,7 @@ import Response from "./response.model";
 import Option from "./option";
 import User from "./user.model";
 import Role from "./role.model";
+import Invite from "./invite.model";
 
 Form.hasMany(Question, {
   as: "questions",
@@ -75,4 +76,18 @@ Role.hasMany(User, {
   onUpdate: "CASCADE",
 });
 
-export { Form, Question, Response, Option, User, Role };
+Invite.belongsTo(User, {
+  as: "sender",
+  foreignKey: "sender_id",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+Invite.belongsTo(User, {
+  as: "receiver",
+  foreignKey: "receiver_id",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+export { Form, Question, Response, Option, User, Role, Invite };

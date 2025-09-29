@@ -6,12 +6,6 @@ const userRouter = Router();
 
 // private
 userRouter.get("/users/me", authenticateAndCsrf, userController.getMe);
-
-userRouter.post(
-  "/users/invite",
-  authenticateAndCsrf,
-  userController.inviteUser
-);
 userRouter.get("/users/roles", authenticateAndCsrf, userController.getRoles);
 
 // public

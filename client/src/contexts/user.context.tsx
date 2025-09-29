@@ -6,13 +6,15 @@ type UserContextType = {
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
   getUser: () => User | null;
+  isLoading: boolean;
 };
 
 export const UserContext = createContext<UserContextType>({
   user: null,
   setUser: () => {},
   logout: () => Promise.resolve(),
-  getUser: () => null
+  getUser: () => null,
+  isLoading: false
 });
 
 export function useUser() {

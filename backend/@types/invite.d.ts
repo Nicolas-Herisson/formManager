@@ -3,3 +3,5 @@ export interface IInvite {
   sender_id: string;
   receiver_id: string;
 }
+
+export interface IInviteCreate extends Optional<IInvite, "id"> {}

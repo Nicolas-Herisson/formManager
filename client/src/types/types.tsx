@@ -101,3 +101,16 @@ export interface InviteUser {
   email: string;
   role_id: number;
 }
+
+export interface Invite {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  receiver: User;
+}
+
+export interface DeleteInvite {
+  invite_id: number;
+  sender_id: number;
+  receiver_id: number;
+}

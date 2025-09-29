@@ -152,15 +152,19 @@ export function refresh(req: Request, res: Response) {
       .json({ status: "error", error: "Vous devez vous connecter" });
   }
 
-  const accessToken = jwt.sign({ id: decoded.id }, process.env.SALT!, {
-    expiresIn: "1h",
-  });
+  const accessToken = jwt.sign(
+    { id: decoded.id, role_id: decoded.role_id },
+    process.env.SALT!,
+    {
+      expiresIn: "1h",
+    }
+  );
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    maxAge: 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
   });
 
   return res.status(200).json({

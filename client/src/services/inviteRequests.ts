@@ -1,9 +1,9 @@
 import httpRequester from './axios.config';
 import { isAxiosError } from 'axios';
 
-export async function fetchGetMe() {
+export async function fetchInviteUser(email: string, name: string, role_id: number) {
   try {
-    const response = await httpRequester.get('/users/me');
+    const response = await httpRequester.post('/invites', { email, name, role_id });
 
     return response.data;
   } catch (error) {
@@ -15,9 +15,9 @@ export async function fetchGetMe() {
   }
 }
 
-export async function fetchGetRoles() {
+export async function fetchGetInvites() {
   try {
-    const response = await httpRequester.get('/users/roles');
+    const response = await httpRequester.get('/invites');
 
     return response.data;
   } catch (error) {
@@ -29,9 +29,9 @@ export async function fetchGetRoles() {
   }
 }
 
-export async function fetchResetPassword(id: string, password: string, confirmPassword: string) {
+export async function fetchDeleteInvite(invite_id: number) {
   try {
-    const response = await httpRequester.patch(`/users/${id}/reset-password`, { id, password, confirmPassword });
+    const response = await httpRequester.delete(`/invites/${invite_id}`);
 
     return response.data;
   } catch (error) {

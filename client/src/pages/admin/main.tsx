@@ -17,7 +17,7 @@ function MainPage() {
     questions: []
   });
 
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
   async function addForm(form: Form) {
     await fetchCreateForm(form);
@@ -43,9 +43,9 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    if (!user) navigate('/login');
+    if (!user && !isLoading) navigate('/login');
     fetchForms();
-  }, [fetchForms, navigate, user]);
+  }, [fetchForms, navigate, user, isLoading]);
 
   return (
     <div className="flex">
