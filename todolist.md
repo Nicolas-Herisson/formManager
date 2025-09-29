@@ -20,7 +20,7 @@
 | ✅ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |
 | ✅ | subtask: Invite user | Admin Features | create user + send mail |
 | ✅ | subtask: create reset password | Backend | update user + redirect to login |
-| ⏳ | admin dashboard delete invite | Admin Features |  |
+| ✅ | admin dashboard delete invite | Admin Features |  |
 | ⏳ | admin dashboard delete users | Admin Features |  |
 
 ## Secondary Tasks
