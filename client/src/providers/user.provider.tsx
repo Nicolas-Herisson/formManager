@@ -9,7 +9,6 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('UserContextProvider');
     try {
       isAuth();
     } catch (error) {
