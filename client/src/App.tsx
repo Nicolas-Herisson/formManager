@@ -6,6 +6,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 import AdminDashboard from './pages/admin/adminDashboard';
 import ResetPassword from './pages/resetPassword';
+import ForgotPassword from './pages/forgotPassword';
 
 function App() {
   return (
@@ -38,8 +39,12 @@ function App() {
           element={<AdminDashboard />}
         />
         <Route
-          path="/reset-password/:id"
+          path="/:isInvite/reset-password/:id"
           element={<ResetPassword />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
         />
       </Routes>
     </>

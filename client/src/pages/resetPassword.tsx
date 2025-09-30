@@ -2,13 +2,13 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import type { ResetPassword } from '../types/types';
-import { fetchResetPassword } from '../services/userRequests';
+import { fetchResetPassword } from '../services/authRequests';
 import { useNavigate, useParams } from 'react-router';
 import { Button } from '@/components/ui/button/button';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id, isInvite } = useParams<{ id: string; isInvite: string }>();
   const {
     register,
     handleSubmit,
@@ -32,7 +32,7 @@ export default function ResetPassword() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetchResetPassword(data.id, data.password, data.confirmPassword);
+      const response = await fetchResetPassword(data.id, data.password, data.confirmPassword, isInvite === '0');
 
       if (response && response.status === 'success') {
         toast.success('Mot de passe réinitialisé avec succès');

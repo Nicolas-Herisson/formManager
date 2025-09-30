@@ -81,6 +81,10 @@ export interface DeleteUser {
   user_id: string;
 }
 
+export interface ForgotPassword {
+  email: string;
+}
+
 export interface Role {
   id: number;
   name: string;

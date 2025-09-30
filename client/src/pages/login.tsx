@@ -86,6 +86,15 @@ export default function Login() {
             S'inscrire
           </Button>
         </p>
+        <p className="text-center">
+          Mot de passe oublié ?{' '}
+          <Button
+            type="button"
+            onClick={() => navigate('/forgot-password')}
+          >
+            Mot de passe oublié
+          </Button>
+        </p>
       </form>
     </div>
   );

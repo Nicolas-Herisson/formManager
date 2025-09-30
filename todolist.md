@@ -15,7 +15,7 @@
 | ✅ | Login | Authentication | - |
 | ✅ | Logout | Authentication | - |
 | ⏳ | Add image on questions | Form Builder | - |
-| ⏳ | User role restrictions | Authorization | Can't save or delete forms |
+| ✅ | User role restrictions | Authorization | Can't access dashboard |
 | ✅ | Admin dashboard | Admin Features | User management required |
 | ✅ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |
 | ✅ | subtask: Invite user | Admin Features | create user + send mail |

@@ -41,3 +41,34 @@ export async function fetchLogout() {
     return null;
   }
 }
+
+export async function fetchForgotPassword(email: string) {
+  try {
+    const { data } = await httpRequester.post('/forgot-password', { email });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) return error.response?.data.error;
+
+    console.error('Error forgot password:', error);
+    return null;
+  }
+}
+
+export async function fetchResetPassword(id: string, password: string, confirmPassword: string, isInvite: boolean) {
+  try {
+    const response = await httpRequester.patch(`/${isInvite ? '0' : '1'}/reset-password`, {
+      id,
+      password,
+      confirmPassword
+    });
+
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return error.response?.data.error;
+    }
+    console.log(error);
+    throw error;
+  }
+}

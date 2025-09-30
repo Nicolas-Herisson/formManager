@@ -4,7 +4,9 @@ import argon2 from "argon2";
 import { emailSchema } from "../schemas/email.schema";
 import { passwordSchema } from "../schemas/password.schema";
 import jwt from "jsonwebtoken";
+import { sendForgotPassword } from "../services/nodemailer.service";
 import { v4 as uuidv4 } from "uuid";
+import Invite from "../models/invite.model";
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -171,4 +173,91 @@ export function refresh(req: Request, res: Response) {
     status: "success",
     message: "Votre token a été actualisé avec succès",
   });
+}
+
+export async function forgotPassword(req: Request, res: Response) {
+  const { email } = req.body;
+
+  try {
+    const findUser = await User.findOne({ where: { email } });
+
+    if (!findUser) {
+      return res
+        .status(200)
+        .json({ status: "error", error: "Un email vous a été envoyé" });
+    }
+
+    const response = await sendForgotPassword(
+      findUser.dataValues.id,
+      findUser.dataValues.email
+    );
+
+    // status 200 avoid user to know if the email is valid or not
+    if (response.status === "error") {
+      return res.status(200).json({ status: "error", error: response.error });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Un email vous a été envoyé",
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ status: "error", error: "Une erreur est survenue" });
+  }
+}
+
+export async function resetPassword(req: Request, res: Response) {
+  try {
+    const { id, password, confirmPassword } = req.body;
+    const isInvite = req.params.isInvite;
+
+    if (!id || !password || !confirmPassword) {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Tous les champs sont requis" });
+    }
+
+    if (isInvite === "1") {
+      const deletedInvite = await Invite.destroy({
+        where: { receiver_id: id },
+      });
+
+      if (!deletedInvite) {
+        return res
+          .status(404)
+          .json({ status: "error", error: "Aucune invitation trouvée" });
+      }
+    }
+
+    const user = await User.findOne({ where: { id } });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "error", error: "Utilisateur non trouvé" });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        status: "error",
+        error: "Les mots de passe ne correspondent pas",
+      });
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    await User.update({ password: hashedPassword }, { where: { id } });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Mot de passe réinitialisé avec succès",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ status: "error", error: "Une erreur est survenue" });
+  }
 }

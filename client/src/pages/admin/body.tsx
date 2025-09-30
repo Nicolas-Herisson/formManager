@@ -4,12 +4,10 @@ import type { Form } from '@/types/types';
 import AdminDashboard from '../admin/adminDashboard';
 
 export default function Body({ form, setForm, updateForm, addForm, selectedPage, selectedForm }: IBodyProps) {
-  // Si la page sélectionnée est 'admin', on affiche directement le dashboard admin
   if (selectedPage === 'admin') {
     return <AdminDashboard />;
   }
 
-  // Pour les pages nécessitant un formulaire sélectionné
   if (!selectedForm || selectedForm.id <= 0) {
     return (
       <div className="flex h-full w-full items-center justify-center">

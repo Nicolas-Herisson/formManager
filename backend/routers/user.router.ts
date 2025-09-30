@@ -13,8 +13,4 @@ userRouter.get("/users/:id", authenticateAndCsrf, userController.getUser);
 userRouter.put("/users/:id", authenticateAndCsrf, userController.updateUser);
 userRouter.delete("/users/:id", authenticateAndCsrf, userController.deleteUser);
 
-// public
-
-userRouter.patch("/users/:id/reset-password", userController.resetPassword);
-
 export default userRouter;

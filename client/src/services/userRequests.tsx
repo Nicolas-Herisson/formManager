@@ -29,20 +29,6 @@ export async function fetchGetRoles() {
   }
 }
 
-export async function fetchResetPassword(id: string, password: string, confirmPassword: string) {
-  try {
-    const response = await httpRequester.patch(`/users/${id}/reset-password`, { id, password, confirmPassword });
-
-    return response.data;
-  } catch (error) {
-    if (isAxiosError(error)) {
-      return error.response?.data.error;
-    }
-    console.log(error);
-    throw error;
-  }
-}
-
 export async function fetchDeleteUser(id: string) {
   try {
     const response = await httpRequester.delete(`/users/${id}`);
