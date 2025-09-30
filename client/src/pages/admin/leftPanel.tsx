@@ -2,14 +2,10 @@ import { Plus, Copy, Trash2, Power } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Form } from '@/types/types';
 import { Button } from '@/components/ui/button/button';
-import { fetchLogout } from '@/services/authRequests';
 import { fetchPublishForm } from '@/services/formRequests';
-import { useNavigate } from 'react-router';
 import { fetchCreateResponse } from '@/services/responseRequests';
 
 export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchForms }: ILeftPanelProps) {
-  const navigate = useNavigate();
-
   const handleCopyLink = async (formId: number) => {
     try {
       const { path } = await fetchCreateResponse({ form_id: formId });
@@ -52,12 +48,6 @@ export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchF
       toast.error("Erreur lors de l'activation du formulaire");
     }
   };
-
-  async function logout() {
-    await fetchLogout();
-
-    navigate('/login');
-  }
 
   return (
     <div className="flex h-screen w-80 flex-col border-r border-gray-200 bg-gray-50">
@@ -143,13 +133,6 @@ export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchF
           ))
         )}
       </div>
-
-      <Button
-        className="sticky"
-        onClick={logout}
-      >
-        Se deconnecter
-      </Button>
     </div>
   );
 }
