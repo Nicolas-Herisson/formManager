@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button/button';
 import type { Form } from '@/types/types';
+import HeaderBurger from '@/components/ui/headerBurger/headerBurger';
 
 export default function Header({ selectedPage, setSelectedPage, selectedForm }: IHeaderProps) {
   return (
@@ -30,14 +31,9 @@ export default function Header({ selectedPage, setSelectedPage, selectedForm }: 
               </>
             )}
           </ul>
+
           <div className="flex items-center gap-1">
-            <Button
-              variant={selectedPage === 'admin' ? 'secondary' : 'ghost'}
-              className={`${selectedPage === 'admin' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'text-gray-600 hover:bg-gray-50'}`}
-              onClick={() => setSelectedPage('admin')}
-            >
-              Admin
-            </Button>
+            <HeaderBurger setSelectedPage={setSelectedPage} />
           </div>
         </div>
       </nav>

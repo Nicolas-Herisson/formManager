@@ -3,10 +3,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { fetchLogout } from '../services/authRequests';
 import type { getMe } from '../types/types';
 import { UserContext } from '../contexts/user.context';
+import { useNavigate } from 'react-router';
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<getMe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -41,6 +44,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     if (response) {
       setUser(null);
       setIsLoading(true);
+      navigate('/login');
     }
   };
 

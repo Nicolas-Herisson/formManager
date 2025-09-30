@@ -1,4 +1,4 @@
-import { Plus, Copy, Trash2, CheckCircle2, XCircle, Power } from 'lucide-react';
+import { Plus, Copy, Trash2, Power } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Form } from '@/types/types';
 import { Button } from '@/components/ui/button/button';
@@ -15,47 +15,11 @@ export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchF
       const { path } = await fetchCreateResponse({ form_id: formId });
       await navigator.clipboard.writeText(path);
 
-      toast.success('Lien copié !', {
-        description: 'Le lien a été copié dans le presse-papier',
-        duration: 3000,
-        position: 'bottom-right',
-        style: {
-          background: '#f0fdf4',
-          color: '#166534',
-          border: '1px solid #bbf7d0',
-          borderRadius: '0.5rem',
-          padding: '0.75rem 1rem',
-          fontWeight: 500
-        },
-        icon: (
-          <CheckCircle2
-            className="text-green-600"
-            size={18}
-          />
-        )
-      });
+      toast.success('Lien copié !');
     } catch (error) {
       console.error('Erreur lors de la copie du lien:', error);
 
-      toast.error('Erreur lors de la copie du lien', {
-        description: 'Veuillez réessayer',
-        duration: 3000,
-        position: 'top-center',
-        style: {
-          background: '#fef2f2',
-          color: '#991b1b',
-          border: '1px solid #fecaca',
-          borderRadius: '0.5rem',
-          padding: '0.75rem 1rem',
-          fontWeight: 500
-        },
-        icon: (
-          <XCircle
-            className="text-red-600"
-            size={18}
-          />
-        )
-      });
+      toast.error('Erreur lors de la copie du lien');
     }
   };
 

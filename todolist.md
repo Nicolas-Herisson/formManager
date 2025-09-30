@@ -32,6 +32,7 @@
 | ⏳ | Refactor form controller | Code Quality | - |
 | ⏳ | Setup test forms | Testing | 2-3 sample forms needed |
 | ⏳ | Add test role | Authorization | Can only test, no register |
+| ⏳ | Use form context or redux | State Management | - |
 
 ## Nice-to-Have
 
@@ -40,4 +41,3 @@
 | ⏳ | Centralize toast style | UI/UX | Consistent notifications |
 | ⏳ | upgrade header and admin dashboard | UI/UX | Consistent design |
 | ⏳ | use cards components | UI/UX | Consistent design |
-
