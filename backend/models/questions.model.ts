@@ -3,36 +3,42 @@ import sequelize from "../database/client";
 import type { IQuestion, ICreateQuestion } from "../@types/question";
 import Option from "./option";
 
-export default class Question extends Model<IQuestion, ICreateQuestion> implements IQuestion{
-    public id!: number;
-    public title!: string;
-    public selector!: string;
-    public required!: boolean;
-    public form_id!: number;
-    public options?: Option[];
-};
+export default class Question
+  extends Model<IQuestion, ICreateQuestion>
+  implements IQuestion
+{
+  public id!: number;
+  public title!: string;
+  public selector!: string;
+  public required!: boolean;
+  public form_id!: number;
+  public options?: Option[];
+}
 
-Question.init({
+Question.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     title: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     selector: {
-        type: DataTypes.TEXT,
+      type: DataTypes.TEXT,
     },
     required: {
-        type: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN,
     },
     form_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
-}, {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
     sequelize,
-    tableName: 'questions'
-});
+    tableName: "questions",
+  }
+);

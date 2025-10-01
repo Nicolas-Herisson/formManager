@@ -20,14 +20,6 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
         }
       ]
     });
-
-    // Scroll to new question
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, 100);
   }
 
   function removeQuestion(id: number) {

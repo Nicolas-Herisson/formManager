@@ -59,11 +59,12 @@ export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchF
           onClick={() => {
             setSelectedForm({
               id: -Date.now(),
-              title: 'Nouveau formulaire',
+              title: '',
               description: '',
               is_published: false,
               questions: []
             });
+            setClick(!click);
           }}
           className="flex w-full items-center justify-center gap-2"
         >

@@ -8,7 +8,7 @@ export default function Body({ form, setForm, updateForm, addForm, selectedPage,
     return <AdminDashboard />;
   }
 
-  if (!selectedForm || selectedForm.id <= 0) {
+  if (!selectedForm) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <div className="text-center">

@@ -23,7 +23,7 @@
 | ✅ | admin dashboard delete invite | Admin Features |  |
 | ✅ | subtask: delete created users when delete invite | Admin Features |  |
 | ✅ | admin dashboard delete users | Admin Features |  |
-| ⏳ | forgot password | Authentication | - |
+| ✅ | forgot password | Authentication | - |
 
 ## Secondary Tasks
 

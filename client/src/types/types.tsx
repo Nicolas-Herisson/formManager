@@ -2,6 +2,7 @@ export interface Question {
   id: number;
   title: string;
   required: boolean;
+  image?: string;
   selector: string;
   options: Option[];
 }
