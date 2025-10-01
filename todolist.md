@@ -15,6 +15,9 @@
 | ✅ | Login | Authentication | - |
 | ✅ | Logout | Authentication | - |
 | ⏳ | Add image on questions | Form Builder | - |
+| ⏳ | subtask: allow user to handle image size with mouse | Form Builder | - |
+| ⏳ | subtask: regiter image on folder | Form Builder | - |
+| ⏳ | subtask: add image path to bdd | Form Builder | - |
 | ✅ | User role restrictions | Authorization | Can't access dashboard |
 | ✅ | Admin dashboard | Admin Features | User management required |
 | ✅ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |

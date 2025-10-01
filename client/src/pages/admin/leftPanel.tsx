@@ -64,7 +64,6 @@ export default function LeftPanel({ forms, setSelectedForm, deleteForm, refetchF
               is_published: false,
               questions: []
             });
-            setClick(!click);
           }}
           className="flex w-full items-center justify-center gap-2"
         >
