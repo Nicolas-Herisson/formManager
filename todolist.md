@@ -14,10 +14,10 @@
 | ✅ | Auth middleware | Backend | - |
 | ✅ | Login | Authentication | - |
 | ✅ | Logout | Authentication | - |
-| ⏳ | Add image on questions | Form Builder | - |
+| ✅ | Add image on questions | Form Builder | - |
 | ⏳ | subtask: allow user to handle image size with mouse | Form Builder | - |
-| ⏳ | subtask: regiter image on folder | Form Builder | - |
-| ⏳ | subtask: add image path to bdd | Form Builder | - |
+| ✅ | subtask: regiter image on folder | Form Builder | - |
+| ✅ | subtask: add image path to bdd | Form Builder | - |
 | ✅ | User role restrictions | Authorization | Can't access dashboard |
 | ✅ | Admin dashboard | Admin Features | User management required |
 | ✅ | subtask: setup nodemailer | Backend | setup nodemailer with invite template |
@@ -27,6 +27,7 @@
 | ✅ | subtask: delete created users when delete invite | Admin Features |  |
 | ✅ | admin dashboard delete users | Admin Features |  |
 | ✅ | forgot password | Authentication | - |
+| ⏳ | on delete image, delete image and directory | Form Builder | - |
 
 ## Secondary Tasks
 
@@ -44,3 +45,5 @@
 | ⏳ | Centralize toast style | UI/UX | Consistent notifications |
 | ✅ | upgrade header and admin dashboard | UI/UX | Consistent design |
 | ⏳ | use cards components | UI/UX | Consistent design |
+| ⏳ | use useForm on editForm page | Form Management | - |
+

@@ -2,7 +2,8 @@ export interface Question {
   id: number;
   title: string;
   required: boolean;
-  image?: string;
+  image?: File;
+  image_url?: string;
   selector: string;
   options: Option[];
 }

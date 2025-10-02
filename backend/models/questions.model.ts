@@ -13,6 +13,7 @@ export default class Question
   public required!: boolean;
   public form_id!: number;
   public options?: Option[];
+  public image_url?: string;
 }
 
 Question.init(
@@ -35,6 +36,9 @@ Question.init(
     form_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    image_url: {
+      type: DataTypes.STRING,
     },
   },
   {

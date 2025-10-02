@@ -4,6 +4,7 @@ import type { Question as QuestionType } from '../../types/types';
 import type { Form } from '@/types/types';
 import { Plus, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchUploadImage, fetchDeleteImage } from '@/services/imageRequests';
 
 export default function EditForm({ form, setForm, updateForm, addForm }: IEditFormProps) {
   function addQuestion() {
@@ -31,10 +32,19 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
     setForm({ ...form, questions: form.questions.map((q) => (q.id === id ? question : q)) });
   }
 
+  function uploadImage(questionTitle: string, image: File): Promise<string> {
+    const response = fetchUploadImage({ formTitle: form.title, questionTitle, image });
+    return response;
+  }
+
+  function deleteImage(questionTitle: string): Promise<string> {
+    const response = fetchDeleteImage({ formTitle: form.title, questionTitle });
+    return response;
+  }
+
   async function handleSubmit(formData: FormData) {
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
-    const newForm = { id: form.id, title, description, is_published: form.is_published, questions: form.questions };
 
     if (!title.trim()) {
       toast.error('Le titre est obligatoire');
@@ -47,24 +57,28 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
 
     const loadingToast = toast.loading('Enregistrement en cours...');
 
-    if (form.id > 0) {
-      try {
+    try {
+      const newForm = {
+        id: form.id,
+        title,
+        description,
+        is_published: form.is_published,
+        questions: form.questions
+      };
+
+      if (form.id > 0) {
         await updateForm(newForm);
-
         toast.success('Formulaire mis à jour avec succès', { id: loadingToast });
-      } catch (error) {
-        toast.error('Erreur lors de la mise à jour du formulaire', { id: loadingToast });
-        console.error(error);
-      }
-    } else {
-      try {
+      } else {
         await addForm(newForm);
-
         toast.success('Formulaire créé avec succès', { id: loadingToast });
-      } catch (error) {
-        toast.error('Erreur lors de la création du formulaire', { id: loadingToast });
-        console.error(error);
       }
+    } catch (error) {
+      toast.error(
+        form.id > 0 ? 'Erreur lors de la mise à jour du formulaire' : 'Erreur lors de la création du formulaire',
+        { id: loadingToast }
+      );
+      console.error(error);
     }
   }
 
@@ -136,6 +150,8 @@ export default function EditForm({ form, setForm, updateForm, addForm }: IEditFo
                       data={question}
                       removeQuestion={removeQuestion}
                       updateQuestion={updateQuestion}
+                      uploadImage={uploadImage}
+                      deleteImage={deleteImage}
                       questionNumber={index + 1}
                     />
                   </div>

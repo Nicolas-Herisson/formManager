@@ -3,8 +3,19 @@ import type { Question as QuestionType } from '../../../types/types';
 import type { Option } from '../../../types/types';
 import SelectorOption from './selectorOption';
 import { Trash2, ChevronDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-export default function Question({ id, data, removeQuestion, updateQuestion, questionNumber }: IQuestion) {
+export default function Question({
+  id,
+  data,
+  removeQuestion,
+  uploadImage,
+  deleteImage,
+  updateQuestion,
+  questionNumber
+}: IQuestion) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   function addOption() {
     const newOption = { id: data.options.length + 1, title: '', checked: false };
     updateQuestion(id, { ...data, options: [...data.options, newOption] });
@@ -17,6 +28,32 @@ export default function Question({ id, data, removeQuestion, updateQuestion, que
   function updateOption(optionId: number, option: Option) {
     updateQuestion(id, { ...data, options: data.options.map((opt) => (opt.id === optionId ? option : opt)) });
   }
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+
+      const response = await uploadImage(data.title, file);
+
+      updateQuestion(id, {
+        ...data,
+        image_url: response
+      });
+    } catch (error) {
+      console.error("Erreur lors du téléchargement de l'image:", error);
+      setImagePreview(null);
+    }
+  };
+
+  useEffect(() => {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+  }, [imagePreview]);
 
   return (
     <div className="space-y-6 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow">
@@ -99,29 +136,29 @@ export default function Question({ id, data, removeQuestion, updateQuestion, que
             type="file"
             id={`image-${id}`}
             className="block w-full appearance-none rounded-md border border-gray-300 py-2 pr-10 pl-3 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-sm"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-
-              if (file) {
-                const imageUrl = URL.createObjectURL(file);
-
-                updateQuestion(id, {
-                  ...data,
-                  image: imageUrl
-                });
-
-                if (data.image) {
-                  URL.revokeObjectURL(data.image);
-                }
-              }
-            }}
+            onChange={handleImageChange}
+            accept="image/*"
           />
-          {data.image && (
-            <img
-              src={data.image}
-              alt=""
-              className="mx-auto mt-2"
-            />
+          {imagePreview && (
+            <>
+              <img
+                src={imagePreview}
+                alt="Aperçu de l'image"
+                className="mx-auto mt-2"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  setImagePreview(null);
+                  await deleteImage(data.title);
+                }}
+                className="text-sm text-blue-600 hover:bg-blue-50"
+              >
+                Supprimer l'image
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -182,4 +219,6 @@ interface IQuestion {
   removeQuestion: (id: number) => void;
   updateQuestion: (id: number, question: QuestionType) => void;
   questionNumber: number;
+  uploadImage: (questionTitle: string, image: File) => Promise<string>;
+  deleteImage: (questionTitle: string) => Promise<string>;
 }

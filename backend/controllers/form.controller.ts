@@ -19,6 +19,7 @@ export async function createForm(req: Request, res: ExpressResponse) {
           title: question.title,
           selector: question.selector,
           required: question.required,
+          image_url: question.image_url,
           form_id: newForm.dataValues.id,
         });
 
@@ -209,6 +210,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
         title: question.title,
         selector: question.selector,
         required: question.required,
+        image_url: question.image_url,
         form_id: form.dataValues.id,
       });
 
@@ -229,6 +231,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
           title: question.title,
           selector: question.selector,
           required: question.required,
+          image_url: question.image_url,
         },
         {
           where: {

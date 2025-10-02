@@ -5,6 +5,7 @@ import responseRouter from "./routers/response.router";
 import authRouter from "./routers/auth.router";
 import userRouter from "./routers/user.router";
 import inviteRouter from "./routers/invite.router";
+import imageRouter from "./routers/image.router";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -31,6 +32,7 @@ app.use("/api", responseRouter);
 app.use("/api", authRouter);
 app.use("/api", userRouter);
 app.use("/api", inviteRouter);
+app.use("/api", imageRouter);
 
 app.listen(process.env.LISTEN_PORT || 3000, () => {
   console.log(
