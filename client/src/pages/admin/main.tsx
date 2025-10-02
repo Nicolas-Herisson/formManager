@@ -41,7 +41,7 @@ function MainPage() {
   const fetchForms = useCallback(async () => {
     const fetchedForms = await fetchGetForms();
 
-    if (fetchedForms.status === 'success') setForms(fetchedForms);
+    if (fetchedForms.status === 'success') setForms(fetchedForms.forms);
   }, []);
 
   useEffect(() => {

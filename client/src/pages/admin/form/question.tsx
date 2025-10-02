@@ -50,10 +50,16 @@ export default function Question({
   };
 
   useEffect(() => {
+    if (data.image_url) {
+      console.log(data.image_url);
+      const imagePath = 'http://localhost:3000' + data.image_url;
+      console.log(imagePath);
+      setImagePreview(imagePath);
+    }
     if (imagePreview) {
       URL.revokeObjectURL(imagePreview);
     }
-  }, [imagePreview]);
+  }, [imagePreview, data.image_url]);
 
   return (
     <div className="space-y-6 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow">
@@ -124,6 +130,7 @@ export default function Question({
         </div>
       </div>
 
+      {/* Image */}
       <div className="space-y-2">
         <label
           htmlFor={`image-${id}`}
@@ -153,6 +160,8 @@ export default function Question({
                 onClick={async () => {
                   setImagePreview(null);
                   await deleteImage(data.title);
+                  const fileInput = document.getElementById(`image-${id}`) as HTMLInputElement;
+                  fileInput.value = '';
                 }}
                 className="text-sm text-blue-600 hover:bg-blue-50"
               >

@@ -3,14 +3,13 @@ import { isAxiosError } from 'axios';
 
 export async function fetchUploadImage(uploadData: IUploadData) {
   try {
-    console.log(uploadData);
     const response = await httpRequester.post('/upload-image', uploadData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
     console.log(response.data);
-    return response.data;
+    return response.data.filePath;
   } catch (error) {
     if (isAxiosError(error)) {
       return error.response?.data.error;
@@ -27,9 +26,8 @@ interface IUploadData {
 
 export async function fetchDeleteImage(deleteData: IDeleteData) {
   try {
-    console.log(deleteData);
     const response = await httpRequester.post('/delete-image', deleteData);
-    console.log(response.data);
+
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

@@ -6,7 +6,8 @@ import Option from "../models/option";
 export async function createForm(req: Request, res: ExpressResponse) {
   try {
     const { title, description, questions } = req.body;
-
+    console.log(req.body);
+    console.log(questions);
     const newForm = await Form.create({
       title,
       description,
@@ -15,6 +16,7 @@ export async function createForm(req: Request, res: ExpressResponse) {
 
     const createdQuestions = await Promise.all(
       questions.map(async (question: Question) => {
+        console.log(question.image_url);
         const createdQuestion = await Question.create({
           title: question.title,
           selector: question.selector,
@@ -90,7 +92,7 @@ export async function getForms(req: Request, res: ExpressResponse) {
       ],
     });
 
-    res.status(200).json(forms);
+    res.status(200).json({ status: "success", forms });
   } catch (error: any) {
     console.error("Error getting forms:", error);
     res.status(500).json({ status: "error", error: error.message });
@@ -206,6 +208,7 @@ export async function updateForm(req: Request, res: ExpressResponse) {
 
     // Create questions
     for (const question of questionsToCreate) {
+      console.log(question);
       const createdQuestion = await Question.create({
         title: question.title,
         selector: question.selector,

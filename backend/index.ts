@@ -8,10 +8,16 @@ import inviteRouter from "./routers/invite.router";
 import imageRouter from "./routers/image.router";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 dotenv.config();
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const publicPath = join(__dirname, "public");
 
 app.use(
   cors({
@@ -24,7 +30,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use("/images", express.static(join(publicPath, "images")));
 app.use(cookieParser());
 
 app.use("/api", formRouter);
@@ -33,7 +39,10 @@ app.use("/api", authRouter);
 app.use("/api", userRouter);
 app.use("/api", inviteRouter);
 app.use("/api", imageRouter);
-
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 app.listen(process.env.LISTEN_PORT || 3000, () => {
   console.log(
     `Server is running on http://${process.env.LISTEN_HOST}:${process.env.LISTEN_PORT}`
