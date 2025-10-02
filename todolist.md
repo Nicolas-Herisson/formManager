@@ -27,7 +27,9 @@
 | ✅ | subtask: delete created users when delete invite | Admin Features |  |
 | ✅ | admin dashboard delete users | Admin Features |  |
 | ✅ | forgot password | Authentication | - |
-| ⏳ | on delete image, delete image and directory | Form Builder | - |
+| ✅ | on delete image, delete image and directory | Form Builder | - |
+| ⏳ | add .env to get api path | Frontend | - |
+| ⏳ | display images on response | Form Builder | - |
 
 ## Secondary Tasks
 

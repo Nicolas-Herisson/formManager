@@ -35,7 +35,7 @@ function MainPage() {
 
   async function updateForm(form: Form) {
     await fetchUpdateForm(form);
-    setForms(await fetchGetForms());
+    setForms((await fetchGetForms()).forms);
   }
 
   const fetchForms = useCallback(async () => {
