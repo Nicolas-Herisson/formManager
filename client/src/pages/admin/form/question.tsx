@@ -51,7 +51,7 @@ export default function Question({
 
   useEffect(() => {
     if (data.image_url) {
-      const imagePath = 'http://localhost:3000' + data.image_url;
+      const imagePath = process.env.BACKEND_URL + data.image_url;
       setImagePreview(imagePath);
     }
     if (imagePreview) {

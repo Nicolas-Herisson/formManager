@@ -122,7 +122,7 @@ export function FormPage() {
 
                     {question.image_url && (
                       <img
-                        src={'http://localhost:3000' + question.image_url}
+                        src={[process.env.BACKEND_URL, question.image_url].join('')}
                         alt={question.title}
                         className="mb-2 max-h-40 self-center"
                       />

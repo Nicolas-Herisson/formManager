@@ -28,7 +28,7 @@
 | ✅ | forgot password | Authentication | - |
 | ✅ | on delete image, delete image and directory | Form Builder | - |
 | ⏳ | add .env to get api path | Frontend | - |
-| ⏳ | display images on response | Form Builder | - |
+| ✅ | display images on response | Form Builder | - |
 
 ## Secondary Tasks
 

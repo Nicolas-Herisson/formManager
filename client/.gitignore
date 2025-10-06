@@ -29,6 +29,7 @@ package-lock.json
 .vite/
 Thumbs.db
 .cache/
+src/.env
 
 # TS build info
 *.tsbuildinfo
