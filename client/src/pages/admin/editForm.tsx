@@ -4,7 +4,7 @@ import type { Question as QuestionType } from '../../types/types';
 import type { Form } from '@/types/types';
 import { Plus, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { fetchUploadImage, fetchDeleteImage } from '@/services/imageRequests';
+import { fetchUploadImage, fetchDeleteImage } from '@/services/ImageRequests';
 
 export default function EditForm({ form, setForm, updateForm, addForm }: IEditFormProps) {
   function addQuestion() {

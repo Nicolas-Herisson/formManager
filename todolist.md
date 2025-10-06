@@ -15,7 +15,6 @@
 | ✅ | Login | Authentication | - |
 | ✅ | Logout | Authentication | - |
 | ✅ | Add image on questions | Form Builder | - |
-| ⏳ | subtask: allow user to handle image size with mouse | Form Builder | - |
 | ✅ | subtask: regiter image on folder | Form Builder | - |
 | ✅ | subtask: add image path to bdd | Form Builder | - |
 | ✅ | User role restrictions | Authorization | Can't access dashboard |
@@ -39,6 +38,7 @@
 | ⏳ | Setup test forms | Testing | 2-3 sample forms needed |
 | ⏳ | Add test role | Authorization | Can only test, no register |
 | ⏳ | Use form context or redux | State Management | - |
+| ⏳ | subtask: allow user to handle image size with mouse | Form Builder | - |
 
 ## Nice-to-Have
 

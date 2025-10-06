@@ -112,12 +112,21 @@ export function FormPage() {
                 {form.questions.map((question) => (
                   <div
                     key={question.id}
-                    className="mb-2"
+                    className="mb-2 flex flex-col gap-2 rounded border border-gray-100 p-2"
                   >
-                    <label className="mb-1 block font-semibold">
+                    <label className="mb-1 block flex flex-col font-semibold">
+                      <h1 className="mb-1 self-center text-lg text-gray-600">Question {question.id}</h1>
                       {question.title}
                       {question.required && <span className="ml-1 text-red-500">*</span>}
                     </label>
+
+                    {question.image_url && (
+                      <img
+                        src={'http://localhost:3000' + question.image_url}
+                        alt={question.title}
+                        className="mb-2 max-h-40 self-center"
+                      />
+                    )}
 
                     {question.selector === 'text' && (
                       <input

@@ -8,7 +8,7 @@ export async function fetchUploadImage(uploadData: IUploadData) {
         'Content-Type': 'multipart/form-data'
       }
     });
-    console.log(response.data);
+
     return response.data.filePath;
   } catch (error) {
     if (isAxiosError(error)) {
