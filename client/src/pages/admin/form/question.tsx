@@ -51,7 +51,7 @@ export default function Question({
 
   useEffect(() => {
     if (data.image_url) {
-      const imagePath = process.env.BACKEND_URL + data.image_url;
+      const imagePath = import.meta.env.VITE_BACKEND_URL + data.image_url;
       setImagePreview(imagePath);
     }
     if (imagePreview) {

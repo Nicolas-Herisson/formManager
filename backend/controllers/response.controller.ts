@@ -3,7 +3,7 @@ import { Form } from "../models/associations.model";
 import { Request, Response as ExpressResponse } from "express";
 import { v4 as uuidv4 } from "uuid";
 
-const FORM_PATH = "http://localhost:5173/client/form/";
+const FORM_PATH = process.env.FRONTEND_URL + "client/form/";
 
 export async function createResponse(req: Request, res: ExpressResponse) {
   try {
@@ -111,13 +111,14 @@ export async function updateResponse(req: Request, res: ExpressResponse) {
         .json({ status: "error", error: "Formulaire non trouvé" });
     }
 
-    if (existingResponse.dataValues.token !== token) {
-      return res
-        .status(401)
-        .json({
-          status: "error",
-          error: "Vous avez déjà soumis ce formulaire",
-        });
+    console.log(existingResponse.dataValues.token);
+    console.log(token);
+
+    if (existingResponse.dataValues.token === token) {
+      return res.status(401).json({
+        status: "error",
+        error: "Vous avez déjà soumis ce formulaire",
+      });
     }
 
     const updatedResponse = await existingResponse.update({

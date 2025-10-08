@@ -19,7 +19,7 @@ export const sendInvite = async (id: string, email: string, role: string) => {
       html: `
       <p>Vous avez été invité à rejoindre Form Manager en tant que ${role}, </p>
       <p>cliquez sur le lien suivant pour initialiser votre mot de passe : </p>
-      <a href="http://localhost:5173/1/reset-password/${id}">cliquez ici</a>
+      <a href="${process.env.FRONTEND_URL}/1/reset-password/${id}">cliquez ici</a>
       <p>Si vous n'avez pas été invité, ignorez ce message.</p>
       <p>Cordialement, </p>
       <p>Form Manager</p>`,
@@ -43,7 +43,7 @@ export const sendForgotPassword = async (id: string, email: string) => {
       html: `
       <p>Vous avez demandé à réinitialiser votre mot de passe, </p>
       <p>cliquez sur le lien suivant pour réinitialiser votre mot de passe : </p>
-      <a href="http://localhost:5173/0/reset-password/${id}">cliquez ici</a>
+      <a href="${process.env.FRONTEND_URL}/0/reset-password/${id}">cliquez ici</a>
       <p>Si vous n'avez pas demandé à réinitialiser votre mot de passe, ignorez ce message.</p>
       <p>Cordialement, </p>
       <p>Form Manager</p>`,

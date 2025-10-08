@@ -27,7 +27,7 @@
 | ✅ | admin dashboard delete users | Admin Features |  |
 | ✅ | forgot password | Authentication | - |
 | ✅ | on delete image, delete image and directory | Form Builder | - |
-| ⏳ | add .env to get api path | Frontend | - |
+| ✅ | add .env to get api path | Frontend | - |
 | ✅ | display images on response | Form Builder | - |
 
 ## Secondary Tasks
@@ -39,6 +39,7 @@
 | ⏳ | Add test role | Authorization | Can only test, no register |
 | ⏳ | Use form context or redux | State Management | - |
 | ⏳ | subtask: allow user to handle image size with mouse | Form Builder | - |
+| ⏳ | convert image on format webp | Form Builder | - |
 
 ## Nice-to-Have
 
